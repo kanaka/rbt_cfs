@@ -91,6 +91,8 @@ function treeDOT(tree) {
     treeReduce(null, tree, function(_, n) {
         if (n.color === 'r') {
             dot += '  ' + n.val + " [color=red];\n";
+        } else {
+            dot += '  ' + n.val + " [color=black];\n";
         }
         if (n.left && n.left !== NIL) {
             dot += "  " + n.val + " -> " + n.left.val + ";\n";
