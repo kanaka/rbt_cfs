@@ -4,6 +4,22 @@
 
 var bst = require('./bst');
 
+exports.testBasics = function(test) {
+    var t = new bst.BST();
+    test.deepEqual(t.tuples(), null);
+
+    t.insert(100);
+    test.deepEqual(t.tuples(), [100,null,null]);
+
+    t.insert(50);
+    test.deepEqual(t.tuples(), [100,[50,null,null],null]);
+
+    t.insert(75);
+    test.deepEqual(t.tuples(), [100,[50,null,[75,null,null]],null]);
+
+    test.done();
+}
+
 exports.testWalk = function(test) {
     var t = new bst.BST();
     test.deepEqual(t.walk('in'), []);
@@ -27,6 +43,7 @@ exports.testSearch = function(test) {
     t.insert(12,5,18,15,13,1,6,4,3,2,19);
     test.equal(t.min().val, 1);
     test.equal(t.max().val, 19);
+    test.equal(t.search(5).val, 5);
     test.equal();
     test.done();
 } 
