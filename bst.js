@@ -7,6 +7,15 @@ function defaultCompareFn (node1, node2) {
     return node1.val - node2.val;
 }
 
+// This is the sentinel for Red-Black trees. It's not used in
+// constructing BSTs but allows sharing of functions more easily
+var NIL = {val:'NIL',
+           color:'b',
+           left:null,
+           right:null,
+           p:null};
+
+
 // treeWalk: Walk the tree and return an array of all the values. The
 // walk order depends on order (a string) which may be:
 //   'in'   -> in-order walk
@@ -19,7 +28,7 @@ function treeWalk (tree, order) {
     var res = [],
         x =  tree;
 
-    if (x !== null && 'val' in x) {
+    if (x !== null && x !== NIL && 'val' in x) {
         if (order === 'pre') {
             res.push(x.val);
         }
@@ -41,9 +50,15 @@ function treeTuple (tree) {
     if (tree === null || !('val' in tree)) {
         return null;
     }
+    if (tree === NIL) {
+        return 'NIL';
+    }
 
     var res = [];
     res.push(tree.val);
+    if ('color' in tree) {
+        res.push(tree.color);
+    }
     res.push(treeTuple(tree.left));
     res.push(treeTuple(tree.right));
     return res;
@@ -70,7 +85,7 @@ function treeSearch (tree, value, compareFn) {
 // treeMin: Return the minimum (left-most) node.
 // Based on TREE-MINIMUM definition in CLRS 12.2
 function treeMin(tree) {
-    while (tree.left) {
+    while (tree.left !== null && tree.left !== NIL) {
         tree = tree.left;
     }
     return tree;
@@ -79,7 +94,7 @@ function treeMin(tree) {
 // treeMin: Return the maximum (right-most) node.
 // Based on TREE-MAXIMUM definition in CLRS 12.2
 function treeMax(tree) {
-    while (tree.right) {
+    while (tree.right !== null && tree.right !== NIL) {
         tree = tree.right;
     }
     return tree;
@@ -172,6 +187,8 @@ function BST (cmpFn) {
     var self = this,
         api = {};
     self.tree = {p:null,left:null,right:null};
+    self.insertFn = treeInsert;
+    self.removeFn = treeRemove;
 
     api.walk   = function(order) { return treeWalk(self.tree, order); };
     api.search = function(val)   { return treeSearch(self.tree, val, cmpFn); };
@@ -179,7 +196,7 @@ function BST (cmpFn) {
     api.max    = function()      { return treeMax(self.tree); };
     api.root   = function()      { return self.tree; };
     api.tuples = function()      { return treeTuple(self.tree); };
-    api.remove = function(node)  { self.tree = treeRemove(self.tree,node); };
+    api.remove = function(node)  { self.tree = self.removeFn(self.tree,node); };
     api.insert = function() {
         // Allow one or more values to be inserted
         if (arguments.length === 1) {
@@ -187,14 +204,14 @@ function BST (cmpFn) {
                         left:null,
                         right:null,
                         p:null};
-            self.tree = treeInsert(self.tree, node, cmpFn);
+            self.tree = self.insertFn(self.tree, node, cmpFn);
         } else {
             for (var i = 0; i < arguments.length; i++) {
                 var node = {val:arguments[i],
                             left:null,
                             right:null,
                             p:null};
-                self.tree = treeInsert(self.tree, node, cmpFn);
+                self.tree = self.insertFn(self.tree, node, cmpFn);
             }
         }
     };
@@ -203,7 +220,7 @@ function BST (cmpFn) {
     return api;
 }
 
-exports.BST = BST;
+exports.NIL = NIL;
 exports.defaultCompareFn = defaultCompareFn;
 exports.treeWalk = treeWalk;
 exports.treeTuple = treeTuple;
@@ -213,3 +230,4 @@ exports.treeMax = treeMax;
 exports.treeInsert = treeInsert;
 exports.treeTransplant = treeTransplant;
 exports.treeRemove = treeRemove;
+exports.BST = BST;
