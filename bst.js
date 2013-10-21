@@ -121,6 +121,46 @@ function treeInsert (tree, value, compareFn) {
     return tree;
 }
 
+// treeTransplant
+// Based on TRANSPLANT definition in CLRS 12.3
+function treeTransplant(tree, dst, src) {
+    var u = dst, v = src;
+    if (u.p === null) {
+        tree = v;
+    } else if (u === u.p.left) {
+        u.p.left = v;
+    } else {
+        u.p.right = v;
+    }
+    if (v !== null) {
+        v.p = u.p;
+    }
+    return tree;
+}
+
+// treeRemove
+// Based on TREE-DELETE definition in CLRS 12.3
+function treeRemove (tree, node) {
+    var z = node,
+        y;
+    if (z.left === null) {
+        tree = treeTransplant(tree,z,z.right);
+    } else if (z.right === null) {
+        tree = treeTransplant(tree,z,z.left);
+    } else {
+        y = treeMin(z.right);
+        if (y.p !== z) {
+            tree = treeTransplant(tree,y,y.right);
+            y.right = z.right;
+            y.right.p = y;
+        }
+        tree = treeTransplant(tree,z,y);
+        y.left = z.left;
+        y.left.p = y;
+    }
+    return tree;
+}
+
 // BST: Binary Search Tree Object
 //   - Constructor: new BST(cmpFn) - create/construct a new BST object
 //       using cmpFn.  If cmpFn is not provided then a numeric comparison
@@ -141,6 +181,7 @@ function BST (cmpFn) {
     api.max    = function()      { return treeMax(tree); }
     api.dump   = function()      { return tree; }
     api.tuples = function()      { return treeTuple(tree); }
+    api.remove = function(node)  { tree = treeRemove(tree,node); }
     api.insert = function() {
         // Allow one or more values to be inserted
         if (arguments.length === 1) {
