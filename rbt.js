@@ -284,4 +284,6 @@ exports.treeLeftRotate = treeLeftRotate;
 exports.treeRightRotate = treeRightRotate;
 exports.redblackInsertFixup = redblackInsertFixup;
 exports.redblackInsert = redblackInsert;
+exports.redblackRemoveFixup = redblackRemoveFixup;
+exports.redblackRemove = redblackRemove;
 exports.RBT = RBT;

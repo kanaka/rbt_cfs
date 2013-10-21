@@ -15,36 +15,8 @@ var NIL = {val:'NIL',
            right:null,
            p:null};
 
-
-// treeWalk: Walk the tree and return an array of all the values. The
-// walk order depends on order (a string) which may be:
-//   'in'   -> in-order walk
-//   'pre'  -> pre-order walk
-//   'post' -> post-order walk
-// Based on INORDER-TREE-WALK definition in CLRS 12.1
-function treeWalk (tree, order) {
-    order = order||"in";  // pre, in, or post
-
-    var res = [],
-        x =  tree;
-
-    if (x !== null && x !== NIL && 'val' in x) {
-        if (order === 'pre') {
-            res.push(x.val);
-        }
-        res = res.concat(treeWalk(x.left, order));
-        if (order === 'in') {
-            res.push(x.val);
-        }
-        res = res.concat(treeWalk(x.right, order));
-        if (order === 'post') {
-            res.push(x.val);
-        }
-    }
-    return res;
-}
-
 // treeTuple: Return a tuple hierarchy in the form: [val,left,right]
+// (or [val,color,left,right] in the case of Red-Black tree)
 // Note: an empty tree will return null
 function treeTuple (tree) {
     if (tree === null || !('val' in tree)) {
@@ -62,6 +34,73 @@ function treeTuple (tree) {
     res.push(treeTuple(tree.left));
     res.push(treeTuple(tree.right));
     return res;
+}
+
+// treeReduce: 
+// Returns the final reduced result
+function treeReduce (result, node, action, order) {
+    order = order||"in";  // pre, in, or post
+
+    if (node !== null && node !== NIL && 'val' in node) {
+        if (order === 'pre') { result = action(result, node); }
+        result = treeReduce(result, node.left, action, order);
+        if (order === 'in') { result = action(result, node); }
+        result = treeReduce(result, node.right, action, order);
+        if (order === 'post') { result = action(result, node); }
+    }
+    return result;
+}
+
+// treeWalk: Walk the tree and return an array of all the values. The
+// walk order depends on order (a string) which may be:
+//   'in'   -> in-order walk
+//   'pre'  -> pre-order walk
+//   'post' -> post-order walk
+// Based on INORDER-TREE-WALK definition in CLRS 12.1
+function treeWalk (tree, order) {
+    return treeReduce([], tree, function(res, node) {
+        return res.concat([node.val]);
+    }, order);
+}
+
+// treeLinks: Return a list of links: [[a, b], [b, c]]
+// Note: an empty tree will return null
+function treeLinks (tree) {
+    return treeReduce([], tree, function(res, node) {
+        var links = [];
+        if (node.left && node.left !== NIL) {
+            links.push([node.val, node.left.val]);
+        }
+        if (node.right && node.right !== NIL) {
+            links.push([node.val, node.right.val]);
+        }
+        return res.concat(links);
+    }, 'pre');
+}
+
+// treeDOT: Return DOT graph description
+// This can be fed to GraphViz to generate a rendering of the graph.
+function treeDOT(tree) {
+    var links = treeLinks(tree),
+        dot;
+    if (tree.p === NIL) {
+        dot = "digraph Red_Black_Tree {\n";
+    } else {
+        dot = "digraph Binary_Search_Tree {\n";
+    }
+    treeReduce(null, tree, function(_, n) {
+        if (n.color === 'r') {
+            dot += '  ' + n.val + " [color=red];\n";
+        }
+        if (n.left && n.left !== NIL) {
+            dot += "  " + n.val + " -> " + n.left.val + ";\n";
+        }
+        if (n.right && n.right !== NIL) {
+            dot += "  " + n.val + " -> " + n.right.val + ";\n";
+        }
+    }, 'pre');
+    dot += "}";
+    return dot;
 }
 
 // treeSearch: Search the tree for value using compareFn.
@@ -196,6 +235,8 @@ function BST (cmpFn) {
     api.max    = function()      { return treeMax(self.tree); };
     api.root   = function()      { return self.tree; };
     api.tuples = function()      { return treeTuple(self.tree); };
+    api.links  = function()      { return treeLinks(self.tree); };
+    api.DOT    = function()      { return treeDOT(self.tree); };
     api.remove = function(node)  { self.tree = self.removeFn(self.tree,node); };
     api.insert = function() {
         // Allow one or more values to be inserted
@@ -222,8 +263,11 @@ function BST (cmpFn) {
 
 exports.NIL = NIL;
 exports.defaultCompareFn = defaultCompareFn;
-exports.treeWalk = treeWalk;
 exports.treeTuple = treeTuple;
+exports.treeReduce = treeReduce;
+exports.treeWalk = treeWalk;
+exports.treeLinks = treeLinks;
+exports.treeDOT = treeDOT;
 exports.treeSearch = treeSearch;
 exports.treeMin = treeMin;
 exports.treeMax = treeMax;
