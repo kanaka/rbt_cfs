@@ -88,17 +88,14 @@ function treeMax(tree) {
 // treeInsert: Add the value to the tree using compareFn to determin
 // the placement. Returns new tree (root node could have changed)
 // Based on TREE-INSERT definition in CLRS 12.3
-function treeInsert (tree, value, compareFn) {
+function treeInsert (tree, node, compareFn) {
     if (typeof compareFn === 'undefined') {
         compareFn = defaultCompareFn;
     }
 
     var x = ('val' in tree) ? tree : null,
         y = null,
-        z = {val:value,
-             left:null,
-             right:null,
-             p:null};
+        z = node;
 
     while (x !== null) {
         y = x;
@@ -166,29 +163,38 @@ function treeRemove (tree, node) {
 //       using cmpFn.  If cmpFn is not provided then a numeric comparison
 //       is done on nodeX.val
 //   - API/Methods: walk, search, min, max, remove, insert. For
-//       debugging: dump, tuples.
+//       debugging: root, tuples.
 function BST (cmpFn) {
-    var tree = {p:null,left:null,right:null},
-        api = {};
-
     if (typeof cmpFn === 'undefined') {
         cmpFn = defaultCompareFn;
     }
 
-    api.walk   = function(order) { return treeWalk(tree, order); };
-    api.search = function(val)   { return treeSearch(tree, val, cmpFn); };
-    api.min    = function()      { return treeMin(tree); };
-    api.max    = function()      { return treeMax(tree); }
-    api.dump   = function()      { return tree; }
-    api.tuples = function()      { return treeTuple(tree); }
-    api.remove = function(node)  { tree = treeRemove(tree,node); }
+    var self = this,
+        api = {};
+    self.tree = {p:null,left:null,right:null};
+
+    api.walk   = function(order) { return treeWalk(self.tree, order); };
+    api.search = function(val)   { return treeSearch(self.tree, val, cmpFn); };
+    api.min    = function()      { return treeMin(self.tree); };
+    api.max    = function()      { return treeMax(self.tree); };
+    api.root   = function()      { return self.tree; };
+    api.tuples = function()      { return treeTuple(self.tree); };
+    api.remove = function(node)  { self.tree = treeRemove(self.tree,node); };
     api.insert = function() {
         // Allow one or more values to be inserted
         if (arguments.length === 1) {
-            tree = treeInsert(tree, arguments[0], cmpFn);
+            var node = {val:arguments[0],
+                        left:null,
+                        right:null,
+                        p:null};
+            self.tree = treeInsert(self.tree, node, cmpFn);
         } else {
             for (var i = 0; i < arguments.length; i++) {
-                tree = treeInsert(tree, arguments[i], cmpFn);
+                var node = {val:arguments[i],
+                            left:null,
+                            right:null,
+                            p:null};
+                self.tree = treeInsert(self.tree, arguments[i], cmpFn);
             }
         }
     };
@@ -198,3 +204,12 @@ function BST (cmpFn) {
 }
 
 exports.BST = BST;
+exports.defaultCompareFn = defaultCompareFn;
+exports.treeWalk = treeWalk;
+exports.treeTuple = treeTuple;
+exports.treeSearch = treeSearch;
+exports.treeMin = treeMin;
+exports.treeMax = treeMax;
+exports.treeInsert = treeInsert;
+exports.treeTransplant = treeTransplant;
+exports.treeRemove = treeRemove;
