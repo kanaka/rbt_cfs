@@ -194,7 +194,7 @@ function BST (cmpFn) {
                             left:null,
                             right:null,
                             p:null};
-                self.tree = treeInsert(self.tree, arguments[i], cmpFn);
+                self.tree = treeInsert(self.tree, node, cmpFn);
             }
         }
     };

@@ -143,7 +143,7 @@ function RBT(cmpFn) {
                             left:null,
                             right:null,
                             p:null};
-                self.tree = redblackInsert(self.tree, arguments[i], cmpFn);
+                self.tree = redblackInsert(self.tree, node, cmpFn);
             }
         }
     }
