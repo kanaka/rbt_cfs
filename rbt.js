@@ -271,8 +271,6 @@ function RBT(cmpFn) {
 
     var self = this,
         api = bst.BST.call(self, cmpFn); // call parent constructor
-    self.tree = NIL;
-    self.tree.p = NIL;
     self.insertFn = redblackInsert;
     self.removeFn = redblackRemove;
 

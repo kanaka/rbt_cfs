@@ -14,14 +14,12 @@ var NIL = {val:'NIL',
            left:null,
            right:null,
            p:null};
+NIL.p = NIL;
 
 // treeTuple: Return a tuple hierarchy in the form: [val,left,right]
 // (or [val,color,left,right] in the case of Red-Black tree)
-// Note: an empty tree will return null
+// Note: an empty tree will return 'NIL'
 function treeTuple (tree) {
-    if (tree === null || !('val' in tree)) {
-        return null;
-    }
     if (tree === NIL) {
         return 'NIL';
     }
@@ -41,7 +39,7 @@ function treeTuple (tree) {
 function treeReduce (result, node, action, order) {
     order = order||"in";  // pre, in, or post
 
-    if (node !== null && node !== NIL && 'val' in node) {
+    if (node !== NIL) {
         if (order === 'pre') { result = action(result, node); }
         result = treeReduce(result, node.left, action, order);
         if (order === 'in') { result = action(result, node); }
@@ -68,10 +66,10 @@ function treeWalk (tree, order) {
 function treeLinks (tree) {
     return treeReduce([], tree, function(res, node) {
         var links = [];
-        if (node.left && node.left !== NIL) {
+        if (node.left !== NIL) {
             links.push([node.val, node.left.val]);
         }
-        if (node.right && node.right !== NIL) {
+        if (node.right !== NIL) {
             links.push([node.val, node.right.val]);
         }
         return res.concat(links);
@@ -113,8 +111,9 @@ function treeSearch (tree, value, compareFn) {
         compareFn = defaultCompareFn;
     }
 
-    if (tree === null || tree.val === undefined
-        || compareFn(tree, {val:value}) === 0) {
+    if (tree === NIL) {
+        return null;
+    } else if (compareFn(tree, {val:value}) === 0) {
         return tree;
     } else if (compareFn({val:value}, tree) < 0) {
         return treeSearch(tree.left, value);
@@ -123,19 +122,27 @@ function treeSearch (tree, value, compareFn) {
     }
 }
 
-// treeMin: Return the minimum (left-most) node.
+// treeMin: Return the maximum (right-most) node or null if the tree
+// is empty (NIL).
 // Based on TREE-MINIMUM definition in CLRS 12.2
 function treeMin(tree) {
-    while (tree.left !== null && tree.left !== NIL) {
+    if (tree === NIL) {
+        return null;
+    }
+    while (tree.left !== NIL) {
         tree = tree.left;
     }
     return tree;
 }
 
-// treeMin: Return the maximum (right-most) node.
+// treeMax: Return the maximum (right-most) node or null if the tree
+// is empty (NIL).
 // Based on TREE-MAXIMUM definition in CLRS 12.2
 function treeMax(tree) {
-    while (tree.right !== null && tree.right !== NIL) {
+    if (tree === NIL) {
+        return null;
+    }
+    while (tree.right !== NIL) {
         tree = tree.right;
     }
     return tree;
@@ -149,11 +156,11 @@ function treeInsert (tree, node, compareFn) {
         compareFn = defaultCompareFn;
     }
 
-    var x = ('val' in tree) ? tree : null,
-        y = null,
+    var x = tree,
+        y = NIL,
         z = node;
 
-    while (x !== null) {
+    while (x !== NIL) {
         y = x;
         if (compareFn(z, x) < 0) {
             x = x.left;
@@ -163,7 +170,7 @@ function treeInsert (tree, node, compareFn) {
     }
 
     z.p = y;
-    if (y === null) {
+    if (y === NIL) {
         // tree was empty
         tree = z;
     } else if (compareFn(z, y) < 0) {
@@ -178,14 +185,14 @@ function treeInsert (tree, node, compareFn) {
 // Based on TRANSPLANT definition in CLRS 12.3
 function treeTransplant(tree, dst, src) {
     var u = dst, v = src;
-    if (u.p === null) {
+    if (u.p === NIL) {
         tree = v;
     } else if (u === u.p.left) {
         u.p.left = v;
     } else {
         u.p.right = v;
     }
-    if (v !== null) {
+    if (v !== NIL) {
         v.p = u.p;
     }
     return tree;
@@ -196,9 +203,9 @@ function treeTransplant(tree, dst, src) {
 function treeRemove (tree, node) {
     var z = node,
         y;
-    if (z.left === null) {
+    if (z.left === NIL) {
         tree = treeTransplant(tree,z,z.right);
-    } else if (z.right === null) {
+    } else if (z.right === NIL) {
         tree = treeTransplant(tree,z,z.left);
     } else {
         y = treeMin(z.right);
@@ -227,7 +234,7 @@ function BST (cmpFn) {
 
     var self = this,
         api = {};
-    self.tree = {p:null,left:null,right:null};
+    self.tree = NIL;
     self.insertFn = treeInsert;
     self.removeFn = treeRemove;
 
@@ -244,16 +251,16 @@ function BST (cmpFn) {
         // Allow one or more values to be inserted
         if (arguments.length === 1) {
             var node = {val:arguments[0],
-                        left:null,
-                        right:null,
-                        p:null};
+                        left:NIL,
+                        right:NIL,
+                        p:NIL};
             self.tree = self.insertFn(self.tree, node, cmpFn);
         } else {
             for (var i = 0; i < arguments.length; i++) {
                 var node = {val:arguments[i],
-                            left:null,
-                            right:null,
-                            p:null};
+                            left:NIL,
+                            right:NIL,
+                            p:NIL};
                 self.tree = self.insertFn(self.tree, node, cmpFn);
             }
         }
