@@ -284,3 +284,5 @@ exports.treeInsert = treeInsert;
 exports.treeTransplant = treeTransplant;
 exports.treeRemove = treeRemove;
 exports.BST = BST;
+
+console.log("Don't run with scissors.")
