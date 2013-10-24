@@ -2,9 +2,9 @@
 //     npm install nodeunit
 //     node_modules/nodeunit/bin/nodeunit test_bst.js
 
-var rbt = require('./rbt');
-
-NIL = rbt.NIL;
+var binarytree = require('./binarytree'),
+    NIL = binarytree.NIL,
+    rbt = require('./rbt');
 
 
 // Give arrays ability to shuffle

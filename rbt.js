@@ -1,6 +1,6 @@
-var bst = require('./bst');
-
-var NIL = bst.NIL;
+var binarytree = require('./binarytree'),
+    NIL = binarytree.NIL,
+    bst = require('./bst');
 
 // CLRS 13.2
 function treeLeftRotate(tree,node) {
@@ -241,10 +241,10 @@ function redblackRemove(tree, node) {
         //console.log("1.2 x: ", bst.treeTuple(x));
         tree = redblackTransplant(tree,z,z.left);
     } else {
-        y = bst.treeMin(z.right);
+        y = bst.bstMin(z.right);
         origColor = y.color;
         x = y.right;
-        //console.log("1.3 x: ", bst.treeTuple(x));
+        //console.log("1.3 x: ", binarytree.treeTuple(x));
         if (x && y.p === z) {
             x.p = y;
         } else {
@@ -258,26 +258,30 @@ function redblackRemove(tree, node) {
         y.color = z.color;
     }
     if (x && origColor === 'b') {
-        //console.log("1.10 x: ", bst.treeTuple(x));
+        //console.log("1.10 x: ", binarytree.treeTuple(x));
         tree = redblackRemoveFixup(tree,x);
     }
     return tree;
 }
 
+// RBT: Red-Black Binary Search Tree Object
+//   - Constructor: new RBT(cmpFn) - create/construct a new RBT
+//     object. If cmpFn is not provided then a numeric comparison is
+//     done on nodeX.val
+//   - API/Methods: all BST methods with remove and insert methods
+//     overridden to support Red-Black balancing.
 function RBT(cmpFn) {
-    if (typeof cmpFn === 'undefined') {
-        cmpFn = bst.defaultCompareFn;
-    }
+    var self = this, api;
+    // call parent/super constructor
+    api = bst.BST.call(self, cmpFn);
 
-    var self = this,
-        api = bst.BST.call(self, cmpFn); // call parent constructor
     self.insertFn = redblackInsert;
     self.removeFn = redblackRemove;
 
+    // Return the API functions (public interface)
     return api;
 }
 
-exports.NIL = NIL;
 exports.treeLeftRotate = treeLeftRotate;
 exports.treeRightRotate = treeRightRotate;
 exports.redblackInsertFixup = redblackInsertFixup;
