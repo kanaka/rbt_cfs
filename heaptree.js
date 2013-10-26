@@ -56,23 +56,23 @@ function heapBubbleDown(tree, node, type, compareFn) {
     }
 
     while (true) {
-        var bigChild = null;
+        var pickChild = null;
         if (node.left !== NIL && node.right !== NIL) {
             if (compareFn(node.left, node.right) > 0) {
-                bigChild = node.right;
+                pickChild = node.right;
             } else {
-                bigChild = node.left;
+                pickChild = node.left;
             }
         } else if (node.left !== NIL) {
-            bigChild = node.left;
+            pickChild = node.left;
         } else {
             break;
         }
 
-        if (compareFn(node, bigChild) < 0) {
+        if (compareFn(node, pickChild) < 0) {
             break;
         } else {
-            tree = binarytree.treeSwap(tree, node, bigChild);
+            tree = binarytree.treeSwap(tree, node, pickChild);
         }
     }
     return tree;

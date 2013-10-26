@@ -30,26 +30,26 @@ function heapBubbleDown(arr, idx, type, compareFn) {
         var left = 2*idx+1,
             right = 2*idx+2,
             last = arr.length-1;
-        var bigChild = null;
+        var pickChild = null;
         if (left <= last && right <= last) {
             if (compareFn(arr[left], arr[right]) > 0) {
-                bigChild = right;
+                pickChild = right;
             } else {
-                bigChild = left;
+                pickChild = left;
             }
         } else if (left <= last) {
-            bigChild = left;
+            pickChild = left;
         } else {
             break;
         }
 
-        if (compareFn(arr[idx], arr[bigChild]) < 0) {
+        if (compareFn(arr[idx], arr[pickChild]) < 0) {
             break;
         } else {
             var tmp = arr[idx];
-            arr[idx] = arr[bigChild];
-            arr[bigChild] = tmp;
-            idx = bigChild;
+            arr[idx] = arr[pickChild];
+            arr[pickChild] = tmp;
+            idx = pickChild;
         }
     }
     return arr;
