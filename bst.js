@@ -148,5 +148,3 @@ exports.bstInsert = bstInsert;
 exports.bstTransplant = bstTransplant;
 exports.bstRemove = bstRemove;
 exports.BST = BST;
-
-console.log("Don't run with scissors.")
