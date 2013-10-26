@@ -103,6 +103,107 @@ function treeDOT(tree) {
     return dot;
 }
 
+// treeSwap
+function treeSwap(tree, n1, n2) {
+    if (n1 === NIL || n2 === NIL) {
+        throw new Error("treeSwap called with NIL node");
+    }
+
+    // If n2 is the parent, then swap them to make the immediate
+    // relation logic a single condition
+    if (n1.p === n2) {
+        var tmp = n1;
+        n1 = n2;
+        n2 = tmp;
+    }
+
+    var p1 = n1.p,
+        p2 = n2.p,
+        n1left = n1.left,
+        n1right = n1.right,
+        n2left = n2.left,
+        n2right = n2.right;
+
+    // Swap n1 and n2 (up to 12 pointer updates)
+    if (n1 === p2) {
+        // Adjacent: n1 is immediate parent of n2
+        n1.p = n2;
+        n2.p = p1;
+        n1.left = n2left;
+        n1.right = n2right;
+        if (n2left !== NIL) {
+            n2left.p = n1;
+        }
+        if (n2right !== NIL) {
+            n2right.p = n1;
+        }
+        if (p1 !== NIL) {
+            if (p1.left === n1) {
+                p1.left = n2;
+            } else {
+                p1.right = n2;
+            }
+        }
+        if (n1left === n2) {
+            n2.left = n1;
+            n2.right = n1right;
+            if (n1right !== NIL) {
+                n1right.p = n2;
+            }
+        } else {
+            n2.left = n1left;
+            n2.right = n1;
+            if (n1left !== NIL) {
+                n1left.p = n2;
+            }
+        }
+    } else {
+        // Non-adjacent
+        n1.p = p2;
+        n2.p = p1;
+        n1.left = n2left;
+        n1.right = n2right;
+        n2.left = n1left;
+        n2.right = n1right;
+        if (p1 !== NIL) {
+            if (p1.left === n1) {
+                p1.left = n2;
+            } else {
+                p1.right = n2;
+            }
+        }
+        if (p2 !== NIL) {
+            if (p2.left === n2) {
+                p2.left = n1;
+            } else {
+                p2.right = n1;
+            }
+        }
+        if (n1left !== NIL) {
+            n1left.p = n2;
+        }
+        if (n1right !== NIL) {
+            n1right.p = n2;
+        }
+        if (n2left !== NIL) {
+            n2left.p = n1;
+        }
+        if (n2right !== NIL) {
+            n2right.p = n1;
+        }
+    }
+
+
+    if (tree === n1) {
+        return n2;
+    } else if (tree === n2) {
+        return n1;
+    } else {
+        return tree;
+    }
+}
+
+
 // BinaryTree: Binary Tree Object
 //   - Constructor: new BinaryTree(cmpFn) - create/construct a new
 //     BinaryTree object using cmpFn.  If cmpFn is not provided then
@@ -155,4 +256,5 @@ exports.treeReduce = treeReduce;
 exports.treeWalk = treeWalk;
 exports.treeLinks = treeLinks;
 exports.treeDOT = treeDOT;
+exports.treeSwap = treeSwap;
 exports.BinaryTree = BinaryTree;
