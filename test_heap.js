@@ -3,12 +3,12 @@
 //     node_modules/nodeunit/bin/nodeunit test_heap.js
 
 var binarytree = require('./binarytree'),
-    NIL = binarytree.NIL,
-    heaptree = require('./heaptree');
+    heaptree = require('./heaptree'),
+    heaparray = require('./heaparray');
 
-exports.testInsert = function(test) {
 
-    var h = new heaptree.Heap('min');
+function insertTests(test, Heap) {
+    var h = new Heap('min');
     h.insert(10);
     test.deepEqual(h.tuples(),
         [10,'NIL','NIL']);
@@ -17,7 +17,7 @@ exports.testInsert = function(test) {
     test.deepEqual(h.tuples(),
         [5,[10,'NIL','NIL'],'NIL']);
 
-    var h = new heaptree.Heap('min');
+    var h = new Heap('min');
     h.insert(10,20,30,100);
     test.deepEqual(h.tuples(),
         [10,[20,[100,'NIL','NIL'],
@@ -30,25 +30,22 @@ exports.testInsert = function(test) {
                [20,'NIL','NIL']],
             [30,'NIL','NIL']]);
 
-    var h = new heaptree.Heap('min');
+    var h = new Heap('min');
     h.insert(10,20,30,100);
     h.insert(15);
     test.deepEqual(h.tuples(),
         [10,[15,[100,'NIL','NIL'],[20,'NIL','NIL']],
             [30,'NIL','NIL']]);
-
-    test.done();
 }
 
-exports.testRemove = function(test) {
-
-    var h = new heaptree.Heap('min');
+function removeTests (test, Heap) {
+    var h = new Heap('min');
     h.insert(10);
     h.remove();
     test.deepEqual(h.tuples(),
             'NIL');
 
-    var h = new heaptree.Heap('min');
+    var h = new Heap('min');
     h.insert(10,20,30,100);
     test.deepEqual(h.tuples(),
         [10,[20,[100,'NIL','NIL'],
@@ -72,6 +69,26 @@ exports.testRemove = function(test) {
     h.remove();
     test.deepEqual(h.tuples(),
         'NIL');
+}
 
+// Run with HeapTree
+exports.testInsertHeapTree = function(test) {
+    insertTests(test, heaptree.HeapTree);
+    test.done();
+}
+
+exports.testRemoveHeapTree = function(test) {
+    insertTests(test, heaptree.HeapTree);
+    test.done();
+}
+
+// Run with HeapArray
+exports.testInsertHeapArray = function(test) {
+    insertTests(test, heaparray.HeapArray);
+    test.done();
+}
+
+exports.testRemoveHeapArray = function(test) {
+    insertTests(test, heaparray.HeapArray);
     test.done();
 }

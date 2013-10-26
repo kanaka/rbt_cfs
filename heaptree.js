@@ -5,8 +5,9 @@ function log2(num) {
     return Math.log(num) / Math.log(2);
 }
 
-// Find the last element in the tree based on size. Returns
-// a tuple of the last element and the parent of the last element.
+// heapGetLast: Find the last element in the tree based on size.
+// Returns a tuple of the last element and the parent of the last
+// element.
 function heapGetLast(tree, size) {
     if (size === 0) {
         return null;
@@ -44,7 +45,7 @@ function heapGetLast(tree, size) {
     }
 }
 
-// heapBubbleDown
+// heapBubbleDown: bubble down node in tree.
 function heapBubbleDown(tree, node, type, compareFn) {
     if (typeof compareFn === 'undefined') {
         compareFn = binarytree.defaultCompareFn;
@@ -77,7 +78,7 @@ function heapBubbleDown(tree, node, type, compareFn) {
     return tree;
 }
 
-// heapBubbleUp
+// heapBubbleUp: bubble up node in tree.
 function heapBubbleUp(tree, node, type, compareFn) {
     if (typeof compareFn === 'undefined') {
         compareFn = binarytree.defaultCompareFn;
@@ -97,8 +98,7 @@ function heapBubbleUp(tree, node, type, compareFn) {
     return tree;
 }
 
-// heapInsert:
-// Based on XX definition in CLRS YY.Y
+// heapInsert: insert node into the tree
 function heapInsert (tree, size, node, type, compareFn) {
     if (typeof compareFn === 'undefined') {
         compareFn = binarytree.defaultCompareFn;
@@ -126,8 +126,7 @@ function heapInsert (tree, size, node, type, compareFn) {
     return tree;
 }
 
-// heapRemove: remove the top element
-// Based on XX definition in CLRS YY.Y
+// heapRemove: remove the top element from tree
 function heapRemove (tree, size, type, compareFn) {
     if (typeof compareFn === 'undefined') {
         compareFn = binarytree.defaultCompareFn;
@@ -162,13 +161,13 @@ function heapRemove (tree, size, type, compareFn) {
 
 
 // Heap: 
-//   - Constructor: new Heap (type, cmpFn) - create/construct a new
-//     Heap binary tree object. The type can be either 'min' or 'max'
-//     to create a MinHeap or MaxHeap. If cmpFn is not provided
+//   - Constructor: new HeapTree (type, cmpFn) - create/construct
+//     a new Heap binary tree object. The type can be either 'min' or
+//     'max' to create a MinHeap or MaxHeap. If cmpFn is not provided
 //     then a numeric comparison is done on nodeX.val.
 //   - API/Methods: all BinaryTree methods plus insert and remove
 //     (remove top) specific to heaps.
-function Heap (type, cmpFn) {
+function HeapTree (type, cmpFn) {
     var self = this,
         api,
         size = 0;
@@ -183,7 +182,7 @@ function Heap (type, cmpFn) {
         throw new Error("Heap type must be 'min' or 'max'");
     }
     api.remove = function() {
-        self.root = heapRemove(self.root, size--, type);
+        self.root = heapRemove(self.root, size--, type, cmpFn);
     }
     self.insertFn = function(tree, node, compareFn) {
         return heapInsert(tree, size++, node, type, compareFn);
@@ -195,6 +194,8 @@ function Heap (type, cmpFn) {
 }
 
 exports.heapGetLast = heapGetLast;
+exports.heapBubbleUp = heapBubbleUp;
+exports.heapBubbleDown = heapBubbleDown;
 exports.heapInsert = heapInsert;
 exports.heapRemove = heapRemove;
-exports.Heap = Heap;
+exports.HeapTree = HeapTree;
