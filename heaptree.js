@@ -44,23 +44,51 @@ function heapGetLast(tree, size) {
     }
 }
 
+// heapBubbleDown
+function heapBubbleDown(tree, node, type, compareFn) {
+    if (typeof compareFn === 'undefined') {
+        compareFn = binarytree.defaultCompareFn;
+    }
+    if (type === 'max') {
+        origCompareFn = compareFn;
+        compareFn = function(n1, n2) { return - origCompareFn; };
+    }
+
+    while (true) {
+        var bigChild = null;
+        if (node.left !== NIL && node.right !== NIL) {
+            if (compareFn(node.left, node.right) > 0) {
+                bigChild = node.right;
+            } else {
+                bigChild = node.left;
+            }
+        } else if (node.left !== NIL) {
+            bigChild = node.left;
+        } else {
+            break;
+        }
+
+        if (compareFn(node, bigChild) < 0) {
+            break;
+        } else {
+            tree = binarytree.treeSwap(tree, node, bigChild);
+        }
+    }
+    return tree;
+}
+
 // heapBubbleUp
 function heapBubbleUp(tree, node, type, compareFn) {
     if (typeof compareFn === 'undefined') {
         compareFn = binarytree.defaultCompareFn;
     }
-
-    if (tree === NIL) {
-        return node;
+    if (type === 'max') {
+        origCompareFn = compareFn;
+        compareFn = function(n1, n2) { return - origCompareFn; };
     }
 
     while (node.p !== NIL) {
-        //console.log("node:", node.val, "node.p:", node.p.val);
-        var cmp = compareFn(node.p, node);
-        if (type === 'max') {
-            cmp = - cmp;
-        }
-        if (cmp < 0) {
+        if (compareFn(node.p, node) < 0) {
             break;
         } else {
             tree = binarytree.treeSwap(tree, node.p, node);
@@ -80,9 +108,11 @@ function heapInsert (tree, size, node, type, compareFn) {
         return node;
     }
 
-    var tp = heapGetLast(tree, size + 1),
-        parent = tp[1];
+    // Get the parent of the next last element
+    var np = heapGetLast(tree, size + 1),
+        parent = np[1];
 
+    // Add the new node to the last position
     if (parent.left === NIL) {
         parent.left = node;
     } else {
@@ -90,20 +120,41 @@ function heapInsert (tree, size, node, type, compareFn) {
     }
     node.p = parent;
 
+    // Bubble up the new node to its position
     tree = heapBubbleUp(tree, node, type, compareFn);
 
     return tree;
 }
 
-// heapRemove:
+// heapRemove: remove the top element
 // Based on XX definition in CLRS YY.Y
 function heapRemove (tree, size, type, compareFn) {
     if (typeof compareFn === 'undefined') {
         compareFn = binarytree.defaultCompareFn;
     }
 
-    var tp = heapGetLast(tree, size),
-        parent = 1;
+    if (size === 1) {
+        return NIL;
+    }
+
+    var remove = tree,
+        np = heapGetLast(tree, size),
+        last = np[0],
+        lparent = np[1];
+
+    // Swap the top and last elements
+    tree = binarytree.treeSwap(tree, remove, last);
+
+    // Remove the new last element
+    if (remove.p.left === remove) {
+        remove.p.left = NIL;
+    } else {
+        remove.p.right = NIL;
+    }
+    remove.p = NIL;
+
+    // Bubble down the top node to its right position
+    tree = heapBubbleDown(tree, tree, type, compareFn);
 
     return tree;
 }

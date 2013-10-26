@@ -39,3 +39,39 @@ exports.testInsert = function(test) {
 
     test.done();
 }
+
+exports.testRemove = function(test) {
+
+    var h = new heaptree.Heap('min');
+    h.insert(10);
+    h.remove();
+    test.deepEqual(h.tuples(),
+            'NIL');
+
+    var h = new heaptree.Heap('min');
+    h.insert(10,20,30,100);
+    test.deepEqual(h.tuples(),
+        [10,[20,[100,'NIL','NIL'],
+                'NIL'],
+            [30,'NIL','NIL']]);
+
+    h.remove();
+    test.deepEqual(h.tuples(),
+        [20,[100,'NIL','NIL'],
+            [30,'NIL','NIL']]);
+
+    h.remove();
+    test.deepEqual(h.tuples(),
+        [30,[100,'NIL','NIL'],
+            'NIL']);
+
+    h.remove();
+    test.deepEqual(h.tuples(),
+        [100,'NIL','NIL']);
+
+    h.remove();
+    test.deepEqual(h.tuples(),
+        'NIL');
+
+    test.done();
+}
