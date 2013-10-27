@@ -10,22 +10,22 @@ var binarytree = require('./binarytree'),
 function insertTests(test, Heap) {
     var h = new Heap('min');
     h.insert(10);
-    test.deepEqual(h.tuples(),
+    test.deepEqual(h.tuple(),
         [10,'NIL','NIL']);
 
     h.insert(5);
-    test.deepEqual(h.tuples(),
+    test.deepEqual(h.tuple(),
         [5,[10,'NIL','NIL'],'NIL']);
 
     var h = new Heap('min');
     h.insert(10,20,30,100);
-    test.deepEqual(h.tuples(),
+    test.deepEqual(h.tuple(),
         [10,[20,[100,'NIL','NIL'],
                 'NIL'],
             [30,'NIL','NIL']]);
 
     h.insert(5);
-    test.deepEqual(h.tuples(),
+    test.deepEqual(h.tuple(),
         [5,[10,[100,'NIL','NIL'],
                [20,'NIL','NIL']],
             [30,'NIL','NIL']]);
@@ -33,7 +33,7 @@ function insertTests(test, Heap) {
     var h = new Heap('min');
     h.insert(10,20,30,100);
     h.insert(15);
-    test.deepEqual(h.tuples(),
+    test.deepEqual(h.tuple(),
         [10,[15,[100,'NIL','NIL'],[20,'NIL','NIL']],
             [30,'NIL','NIL']]);
 }
@@ -42,32 +42,32 @@ function removeTests (test, Heap) {
     var h = new Heap('min');
     h.insert(10);
     h.remove();
-    test.deepEqual(h.tuples(),
+    test.deepEqual(h.tuple(),
             'NIL');
 
     var h = new Heap('min');
     h.insert(10,20,30,100);
-    test.deepEqual(h.tuples(),
+    test.deepEqual(h.tuple(),
         [10,[20,[100,'NIL','NIL'],
                 'NIL'],
             [30,'NIL','NIL']]);
 
     h.remove();
-    test.deepEqual(h.tuples(),
+    test.deepEqual(h.tuple(),
         [20,[100,'NIL','NIL'],
             [30,'NIL','NIL']]);
 
     h.remove();
-    test.deepEqual(h.tuples(),
+    test.deepEqual(h.tuple(),
         [30,[100,'NIL','NIL'],
             'NIL']);
 
     h.remove();
-    test.deepEqual(h.tuples(),
+    test.deepEqual(h.tuple(),
         [100,'NIL','NIL']);
 
     h.remove();
-    test.deepEqual(h.tuples(),
+    test.deepEqual(h.tuple(),
         'NIL');
 }
 

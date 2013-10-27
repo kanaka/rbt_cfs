@@ -132,7 +132,7 @@ function HeapArray (type, cmpFn) {
     self.root = [];
 
     api.root   = function()      { return self.root; };
-    api.tuples = function()      { return heapTuple(self.root); };
+    api.tuple  = function()      { return heapTuple(self.root); };
     //api.walk   = function(order) { return treeWalk(self.root, order); };
     //api.links  = function()      { return treeLinks(self.root); };
     //api.DOT    = function()      { return treeDOT(self.root); };

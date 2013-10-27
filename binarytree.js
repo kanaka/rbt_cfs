@@ -222,7 +222,7 @@ function BinaryTree (cmpFn) {
 
     api.walk   = function(order) { return treeWalk(self.root, order); };
     api.root   = function()      { return self.root; };
-    api.tuples = function()      { return treeTuple(self.root); };
+    api.tuple  = function()      { return treeTuple(self.root); };
     api.links  = function()      { return treeLinks(self.root); };
     api.DOT    = function()      { return treeDOT(self.root); };
     api.remove = function(node)  { self.root = self.removeFn(self.root,node); };

@@ -55,7 +55,7 @@ function checkPaths(node) {
 
 // Make sure that the tree maintains red-black properties
 // CLRS 13.1
-function checkTree(test, tree, tuples) {
+function checkTree(test, tree, tuple) {
 
     var root = tree.root();
     
@@ -67,15 +67,15 @@ function checkTree(test, tree, tuples) {
 
     // If we are given a tuple hierarchy than make sure it matches the
     // tree
-    if (tuples) {
-        test.deepEqual(tree.tuples(),tuples);
+    if (tuple) {
+        test.deepEqual(tree.tuple(),tuple);
     }
 }
 
 
 exports.testInsert = function(test) {
     var t = new rbt.RBT();
-    test.deepEqual(t.tuples(),
+    test.deepEqual(t.tuple(),
                    'NIL');
 
     t.insert(100);

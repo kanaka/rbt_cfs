@@ -6,16 +6,20 @@ var bst = require('./bst');
 
 exports.testBasics = function(test) {
     var t = new bst.BST();
-    test.deepEqual(t.tuples(), 'NIL');
+    test.deepEqual(t.tuple(),
+                   'NIL');
 
     t.insert(100);
-    test.deepEqual(t.tuples(), [100,'NIL','NIL']);
+    test.deepEqual(t.tuple(),
+                  [100,'NIL','NIL']);
 
     t.insert(50);
-    test.deepEqual(t.tuples(), [100,[50,'NIL','NIL'],'NIL']);
+    test.deepEqual(t.tuple(),
+                  [100,[50,'NIL','NIL'],'NIL']);
 
     t.insert(75);
-    test.deepEqual(t.tuples(), [100,[50,'NIL',[75,'NIL','NIL']],'NIL']);
+    test.deepEqual(t.tuple(),
+                  [100,[50,'NIL',[75,'NIL','NIL']],'NIL']);
 
     test.done();
 }
@@ -52,33 +56,33 @@ exports.testRemove = function(test) {
     // CLRS Figure 12.4 (a)
     var t = new bst.BST();
     t.insert(50,80,60,100);
-    test.deepEqual(t.tuples(), [50,'NIL',
+    test.deepEqual(t.tuple(), [50,'NIL',
                                    [80,[60,'NIL','NIL'],
                                        [100,'NIL','NIL']]]);
     t.remove(t.search(50));
-    test.deepEqual(t.tuples(), [80,[60,'NIL','NIL'],
+    test.deepEqual(t.tuple(), [80,[60,'NIL','NIL'],
                                    [100,'NIL','NIL']]);
 
     // CLRS Figure 12.4 (b)
     var t = new bst.BST();
     t.insert(50,20,0,40);
-    test.deepEqual(t.tuples(), [50,[20,[0,'NIL','NIL'],
+    test.deepEqual(t.tuple(), [50,[20,[0,'NIL','NIL'],
                                        [40,'NIL','NIL']],
                                    'NIL']);
     t.remove(t.search(50));
-    test.deepEqual(t.tuples(), [20,[0,'NIL','NIL'],
+    test.deepEqual(t.tuple(), [20,[0,'NIL','NIL'],
                                    [40,'NIL','NIL']]);
 
     // CLRS Figure 12.4 (c)
     var t = new bst.BST();
     t.insert(50,20,0,40,80,90,85,95);
-    test.deepEqual(t.tuples(), [50,[20,[0,'NIL','NIL'],
+    test.deepEqual(t.tuple(), [50,[20,[0,'NIL','NIL'],
                                        [40,'NIL','NIL']],
                                    [80,'NIL',
                                        [90,[85,'NIL','NIL'],
                                            [95,'NIL','NIL']]]]);
     t.remove(t.search(50));
-    test.deepEqual(t.tuples(), [80,[20,[0,'NIL','NIL'],
+    test.deepEqual(t.tuple(), [80,[20,[0,'NIL','NIL'],
                                        [40,'NIL','NIL']],
                                    [90,[85,'NIL','NIL'],
                                        [95,'NIL','NIL']]]);
@@ -86,14 +90,14 @@ exports.testRemove = function(test) {
     // CLRS Figure 12.4 (d)
     var t = new bst.BST();
     t.insert(50,20,0,40,80,100,60,70,65,75);
-    test.deepEqual(t.tuples(), [50,[20,[0,'NIL','NIL'],
+    test.deepEqual(t.tuple(), [50,[20,[0,'NIL','NIL'],
                                        [40,'NIL','NIL']],
                                    [80,[60,'NIL',
                                            [70,[65,'NIL','NIL'],
                                                [75,'NIL','NIL']]],
                                        [100,'NIL','NIL']]]);
     t.remove(t.search(50));
-    test.deepEqual(t.tuples(), [60,[20,[0,'NIL','NIL'],
+    test.deepEqual(t.tuple(), [60,[20,[0,'NIL','NIL'],
                                        [40,'NIL','NIL']],
                                    [80,[70,[65,'NIL','NIL'],
                                            [75,'NIL','NIL']],
