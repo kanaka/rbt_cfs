@@ -15,6 +15,78 @@ function heapTuple (arr, idx) {
     return res;
 }
 
+// heapReduce
+function heapReduce (result, arr, action, order, idx) {
+    order = order||"in";  // pre, in, or post
+    idx = idx||0;
+
+    if (idx < arr.length) {
+        if (order === 'pre') { result = action(result, idx); }
+        result = heapReduce(result, arr, action, order, idx*2+1);
+        if (order === 'in') { result = action(result, idx); }
+        result = heapReduce(result, arr, action, order, idx*2+2);
+        if (order === 'post') { result = action(result, idx); }
+    }
+    return result;
+}
+
+// TODO: heapWalk, heapLinks, heapDOT share a lot of code with
+// binarytree.js
+
+// treeWalk: Walk the tree and return an array of all the values. The
+// walk order depends on order (a string) which may be:
+//   'in'   -> in-order walk
+//   'pre'  -> pre-order walk
+//   'post' -> post-order walk
+// Based on INORDER-TREE-WALK definition in CLRS 12.1
+function heapWalk (arr, order) {
+    return heapReduce([], arr, function(res, idx) {
+        return res.concat([arr[idx].val]);
+    }, order);
+}
+
+// heapLinks: Return a list of links: [[a, b], [b, c]]
+// Note: an empty heap will return null
+function heapLinks (arr) {
+    return heapReduce([], arr, function(res, idx) {
+        var links = [];
+        if (idx*2 + 1 < arr.length) {
+            links.push([arr[idx].val, arr[idx*2+1].val]);
+        }
+        if (idx*2 + 2 < arr.length) {
+            links.push([arr[idx].val, arr[idx*2+2].val]);
+        }
+        return res.concat(links);
+    }, 'pre');
+}
+
+// heapDOT: Return DOT graph description
+// This can be fed to GraphViz to generate a rendering of the graph.
+function heapDOT(arr) {
+    var links = heapLinks(arr),
+        dot;
+    dot = "digraph Heap_Array {\n";
+    heapReduce(null, arr, function(_, idx) {
+        var n = arr[idx],
+            nleft = arr[idx*2+1],
+            nright = arr[idx*2+2];
+        if (n.color === 'r') {
+            dot += '  ' + n.val + " [color=red];\n";
+        } else {
+            dot += '  ' + n.val + " [color=black];\n";
+        }
+        if (nleft) {
+            dot += "  " + n.val + " -> " + nleft.val + ";\n";
+        }
+        if (nright) {
+            dot += "  " + n.val + " -> " + nright.val + ";\n";
+        }
+    }, 'pre');
+    dot += "}";
+    return dot;
+}
+
+
 // heapBubbleDown: bubble down the idx element
 function heapBubbleDown(arr, idx, type, compareFn) {
     if (typeof compareFn === 'undefined') {
@@ -130,15 +202,19 @@ function HeapArray (type, cmpFn) {
     api = binarytree.BinaryTree.call(self, cmpFn);
 
     self.root = [];
+    self.insertFn = function(tree, node, compareFn) {
+        delete node.left;
+        delete node.right;
+        delete node.p;
+        return heapInsert(tree, node, type, cmpFn);
+    }
 
     api.root   = function()      { return self.root; };
+    api.reduce = function(r,f,o) { return heapReduce(r, self.root, f, o); };
     api.tuple  = function()      { return heapTuple(self.root); };
-    //api.walk   = function(order) { return treeWalk(self.root, order); };
-    //api.links  = function()      { return treeLinks(self.root); };
-    //api.DOT    = function()      { return treeDOT(self.root); };
-    api.walk = api.links = api.DOT = function () {
-        throw new Error("not implemented yet");
-    }
+    api.walk   = function(order) { return heapWalk(self.root, order); };
+    api.links  = function()      { return heapLinks(self.root); };
+    api.DOT    = function()      { return heapDOT(self.root); };
 
     if (type === 'min') {
         api.min = function() { return self.root[0]; };
@@ -150,20 +226,18 @@ function HeapArray (type, cmpFn) {
     api.remove = function() {
         self.root = heapRemove(self.root, type, cmpFn);
     }
-    self.insertFn = function(tree, node, compareFn) {
-        delete node.left;
-        delete node.right;
-        delete node.p;
-        return heapInsert(tree, node, type, cmpFn);
-    }
 
     // Return the API functions (public interface)
     return api;
 }
 
 exports.heapTuple = heapTuple;
-exports.heapBubbleUp = heapBubbleUp;
+exports.heapReduce = heapReduce;
+exports.heapWalk = heapWalk;
+exports.heapLinks = heapLinks;
+exports.heapDOT = heapDOT;
 exports.heapBubbleDown = heapBubbleDown;
+exports.heapBubbleUp = heapBubbleUp;
 exports.heapInsert = heapInsert;
 exports.heapRemove = heapRemove;
 exports.HeapArray = HeapArray;

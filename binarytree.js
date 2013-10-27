@@ -208,7 +208,8 @@ function treeSwap(tree, n1, n2) {
 //   - Constructor: new BinaryTree(cmpFn) - create/construct a new
 //     BinaryTree object using cmpFn.  If cmpFn is not provided then
 //     a numeric comparison is done on nodeX.val
-//   - API/Methods: walk. For debug/output: root, tuples, links, DOT.
+//   - API/Methods: walk, reduce. For debug/output: root, tuple,
+//     links, DOT.
 function BinaryTree (cmpFn) {
     if (typeof cmpFn === 'undefined') {
         cmpFn = defaultCompareFn;
@@ -220,9 +221,10 @@ function BinaryTree (cmpFn) {
     self.insertFn = function() { throw new Error("No insertFn defined"); };
     self.removeFn = function() { throw new Error("No removeFn defined"); };
 
-    api.walk   = function(order) { return treeWalk(self.root, order); };
     api.root   = function()      { return self.root; };
+    api.reduce = function(r,f,o) { return treeReduce(r, self.root, f, o); };
     api.tuple  = function()      { return treeTuple(self.root); };
+    api.walk   = function(order) { return treeWalk(self.root, order); };
     api.links  = function()      { return treeLinks(self.root); };
     api.DOT    = function()      { return treeDOT(self.root); };
     api.remove = function(node)  { self.root = self.removeFn(self.root,node); };

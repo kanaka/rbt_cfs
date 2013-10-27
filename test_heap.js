@@ -36,6 +36,10 @@ function insertTests(test, Heap) {
     test.deepEqual(h.tuple(),
         [10,[15,[100,'NIL','NIL'],[20,'NIL','NIL']],
             [30,'NIL','NIL']]);
+
+    test.equal(h.reduce(0, function(r, n) { return r+n.val; }),
+               225);
+
 }
 
 function removeTests (test, Heap) {

@@ -21,6 +21,9 @@ exports.testBasics = function(test) {
     test.deepEqual(t.tuple(),
                   [100,[50,'NIL',[75,'NIL','NIL']],'NIL']);
 
+    test.equal(t.reduce(0, function(r, n) { return r+n.val; }),
+               225);
+
     test.done();
 }
 
