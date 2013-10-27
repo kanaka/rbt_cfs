@@ -2,6 +2,8 @@
 //     npm install nodeunit
 //     node_modules/nodeunit/bin/nodeunit test_bst.js
 
+"use strict";
+
 var bst = require('./bst');
 
 exports.testBasics = function(test) {

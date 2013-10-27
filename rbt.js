@@ -1,3 +1,5 @@
+"use strict";
+
 var binarytree = require('./binarytree'),
     NIL = binarytree.NIL,
     bst = require('./bst');
@@ -49,7 +51,7 @@ function treeRightRotate(tree,node) {
 
 // CLRS 13.3
 function redblackInsertFixup(tree, node) {
-    var z = node;
+    var y, z = node;
     while (z.p.color === 'r') {
         if (z.p === z.p.p.left) {
             y = z.p.p.right;

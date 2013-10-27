@@ -1,3 +1,5 @@
+"use strict";
+
 var binarytree = require('./binarytree');
 
 // heapTuple: Return a tuple hierarchy in the form: [val,left,right]

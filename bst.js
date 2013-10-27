@@ -1,3 +1,5 @@
+"use strict";
+
 var binarytree = require('./binarytree'),
     NIL = binarytree.NIL;
 

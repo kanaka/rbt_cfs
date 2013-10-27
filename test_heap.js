@@ -2,6 +2,8 @@
 //     npm install nodeunit
 //     node_modules/nodeunit/bin/nodeunit test_heap.js
 
+"use strict";
+
 var binarytree = require('./binarytree'),
     heaptree = require('./heaptree'),
     heaparray = require('./heaparray');
