@@ -7,6 +7,14 @@ var binarytree = require('./binarytree'),
     heaparray = require('./heaparray');
 
 
+function walkTests(test, Heap) {
+    var h = new Heap('min');
+    h.insert(10,20,30,100);
+    test.deepEqual(h.links(),
+        [[10,20],[10,30],[20,100]]);
+
+}
+
 function insertTests(test, Heap) {
     var h = new Heap('min');
     h.insert(10);
@@ -38,8 +46,7 @@ function insertTests(test, Heap) {
             [30,'NIL','NIL']]);
 
     test.equal(h.reduce(0, function(r, n) { return r+n.val; }),
-               225);
-
+               175);
 }
 
 function removeTests (test, Heap) {
@@ -76,6 +83,11 @@ function removeTests (test, Heap) {
 }
 
 // Run with HeapTree
+exports.testWalkHeapTree = function(test) {
+    walkTests(test, heaptree.HeapTree);
+    test.done();
+}
+
 exports.testInsertHeapTree = function(test) {
     insertTests(test, heaptree.HeapTree);
     test.done();
@@ -87,6 +99,11 @@ exports.testRemoveHeapTree = function(test) {
 }
 
 // Run with HeapArray
+exports.testWalkHeapArray = function(test) {
+    walkTests(test, heaparray.HeapArray);
+    test.done();
+}
+
 exports.testInsertHeapArray = function(test) {
     insertTests(test, heaparray.HeapArray);
     test.done();

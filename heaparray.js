@@ -21,11 +21,11 @@ function heapReduce (result, arr, action, order, idx) {
     idx = idx||0;
 
     if (idx < arr.length) {
-        if (order === 'pre') { result = action(result, idx); }
+        if (order === 'pre') { result = action(result, arr[idx], arr, idx); }
         result = heapReduce(result, arr, action, order, idx*2+1);
-        if (order === 'in') { result = action(result, idx); }
+        if (order === 'in') { result = action(result, arr[idx], arr, idx); }
         result = heapReduce(result, arr, action, order, idx*2+2);
-        if (order === 'post') { result = action(result, idx); }
+        if (order === 'post') { result = action(result, arr[idx], arr, idx); }
     }
     return result;
 }
@@ -40,21 +40,21 @@ function heapReduce (result, arr, action, order, idx) {
 //   'post' -> post-order walk
 // Based on INORDER-TREE-WALK definition in CLRS 12.1
 function heapWalk (arr, order) {
-    return heapReduce([], arr, function(res, idx) {
-        return res.concat([arr[idx].val]);
+    return heapReduce([], arr, function(res, node, arr, idx) {
+        return res.concat([node.val]);
     }, order);
 }
 
 // heapLinks: Return a list of links: [[a, b], [b, c]]
 // Note: an empty heap will return null
 function heapLinks (arr) {
-    return heapReduce([], arr, function(res, idx) {
+    return heapReduce([], arr, function(res, node, arr, idx) {
         var links = [];
         if (idx*2 + 1 < arr.length) {
-            links.push([arr[idx].val, arr[idx*2+1].val]);
+            links.push([node.val, arr[idx*2+1].val]);
         }
         if (idx*2 + 2 < arr.length) {
-            links.push([arr[idx].val, arr[idx*2+2].val]);
+            links.push([node.val, arr[idx*2+2].val]);
         }
         return res.concat(links);
     }, 'pre');
@@ -66,9 +66,8 @@ function heapDOT(arr) {
     var links = heapLinks(arr),
         dot;
     dot = "digraph Heap_Array {\n";
-    heapReduce(null, arr, function(_, idx) {
-        var n = arr[idx],
-            nleft = arr[idx*2+1],
+    heapReduce(null, arr, function(_, n, arr, idx) {
+        var nleft = arr[idx*2+1],
             nright = arr[idx*2+2];
         if (n.color === 'r') {
             dot += '  ' + n.val + " [color=red];\n";
