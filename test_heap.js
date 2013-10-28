@@ -12,8 +12,8 @@ var binarytree = require('./binarytree'),
 function walkTests(test, Heap) {
     var h = new Heap('min');
     h.insert(10,20,30,100);
-    test.deepEqual(h.links(),
-        [[10,20],[10,30],[20,100]]);
+    test.deepEqual(h.walk('in'),
+            [100,20,10,30]);
 
 }
 

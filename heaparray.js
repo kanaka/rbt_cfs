@@ -50,13 +50,15 @@ function heapWalk (arr, order) {
 // heapLinks: Return a list of links: [[a, b], [b, c]]
 // Note: an empty heap will return null
 function heapLinks (arr) {
-    return heapReduce([], arr, function(res, node, arr, idx) {
+    return heapReduce([], arr, function(res, n, arr, idx) {
         var links = [];
         if (idx*2 + 1 < arr.length) {
-            links.push([node.val, arr[idx*2+1].val]);
+            var n2 = arr[idx*2+1];
+            links.push([n.id+"."+n.val, n2.id+"."+n2.val]);
         }
         if (idx*2 + 2 < arr.length) {
-            links.push([node.val, arr[idx*2+2].val]);
+            var n2 = arr[idx*2+2];
+            links.push([n.id+"."+n.val, n2.id+"."+n2.val]);
         }
         return res.concat(links);
     }, 'pre');
@@ -69,20 +71,20 @@ function heapDOT(arr) {
         dot;
     dot = "digraph Heap_Array {\n";
     heapReduce(null, arr, function(_, n, arr, idx) {
-        var nleft = arr[idx*2+1],
+        var name = n.id + "." + n.val,
+            nleft = arr[idx*2+1],
             nright = arr[idx*2+2];
         if (n.color === 'r') {
-            dot += '  ' + n.val + " [color=red];\n";
+            dot += '  ' + name + " [color=red];\n";
         } else {
-            dot += '  ' + n.val + " [color=black];\n";
-        }
-        if (nleft) {
-            dot += "  " + n.val + " -> " + nleft.val + ";\n";
-        }
-        if (nright) {
-            dot += "  " + n.val + " -> " + nright.val + ";\n";
+            dot += '  ' + name + " [color=black];\n";
         }
     }, 'pre');
+    for (var i = 0; i < links.length; i++) {
+        var n1 = links[i][0],
+            n2 = links[i][1];
+        dot += "  " + n1 + " -> " + n2 + ";\n";
+    }
     dot += "}";
     return dot;
 }

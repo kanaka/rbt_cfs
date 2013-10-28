@@ -11,7 +11,8 @@ function defaultCompareFn (node1, node2) {
 
 // This is the sentinel node that is used instead of null pointers
 // (and is always black in the case of red-black trees).
-var NIL = {val:'NIL',
+var NIL = {id:0,
+           val:'NIL',
            color:'b',
            left:null,
            right:null,
@@ -66,13 +67,13 @@ function treeWalk (tree, order) {
 // treeLinks: Return a list of links: [[a, b], [b, c]]
 // Note: an empty tree will return null
 function treeLinks (tree) {
-    return treeReduce([], tree, function(res, node) {
+    return treeReduce([], tree, function(res, n) {
         var links = [];
-        if (node.left !== NIL) {
-            links.push([node.val, node.left.val]);
+        if (n.left !== NIL) {
+            links.push([n.id+"."+n.val, n.left.id+"."+n.left.val]);
         }
-        if (node.right !== NIL) {
-            links.push([node.val, node.right.val]);
+        if (n.right !== NIL) {
+            links.push([n.id+"."+n.val, n.right.id+"."+n.right.val]);
         }
         return res.concat(links);
     }, 'pre');
@@ -89,18 +90,18 @@ function treeDOT(tree) {
         dot = "digraph Binary_Search_Tree {\n";
     }
     treeReduce(null, tree, function(_, n) {
+        var name = n.id + "." + n.val;
         if (n.color === 'r') {
-            dot += '  ' + n.val + " [color=red];\n";
+            dot += '  ' + name + " [color=red];\n";
         } else {
-            dot += '  ' + n.val + " [color=black];\n";
-        }
-        if (n.left && n.left !== NIL) {
-            dot += "  " + n.val + " -> " + n.left.val + ";\n";
-        }
-        if (n.right && n.right !== NIL) {
-            dot += "  " + n.val + " -> " + n.right.val + ";\n";
+            dot += '  ' + name + " [color=black];\n";
         }
     }, 'pre');
+    for (var i = 0; i < links.length; i++) {
+        var n1 = links[i][0],
+            n2 = links[i][1];
+        dot += "  " + n1 + " -> " + n2 + ";\n";
+    }
     dot += "}";
     return dot;
 }
@@ -218,7 +219,8 @@ function BinaryTree (cmpFn) {
     }
 
     var self = this,
-        api = {};
+        api = {},
+        hashId = 1;
     self.root = NIL;
     self.insertFn = function() { throw new Error("No insertFn defined"); };
     self.removeFn = function() { throw new Error("No removeFn defined"); };
@@ -233,14 +235,16 @@ function BinaryTree (cmpFn) {
     api.insert = function() {
         // Allow one or more values to be inserted
         if (arguments.length === 1) {
-            var node = {val:arguments[0],
+            var node = {id:hashId++,
+                        val:arguments[0],
                         left:NIL,
                         right:NIL,
                         p:NIL};
             self.root = self.insertFn(self.root, node, cmpFn);
         } else {
             for (var i = 0; i < arguments.length; i++) {
-                var node = {val:arguments[i],
+                var node = {id:hashId++,
+                            val:arguments[i],
                             left:NIL,
                             right:NIL,
                             p:NIL};
