@@ -222,16 +222,21 @@ function BinaryTree (cmpFn) {
         api = {},
         hashId = 1;
     self.root = NIL;
+    self.size = 0;
     self.insertFn = function() { throw new Error("No insertFn defined"); };
     self.removeFn = function() { throw new Error("No removeFn defined"); };
 
     api.root   = function()      { return self.root; };
+    api.size   = function()      { return self.size; };
     api.reduce = function(r,f,o) { return treeReduce(r, self.root, f, o); };
     api.tuple  = function()      { return treeTuple(self.root); };
     api.walk   = function(order) { return treeWalk(self.root, order); };
     api.links  = function()      { return treeLinks(self.root); };
     api.DOT    = function()      { return treeDOT(self.root); };
-    api.remove = function(node)  { self.root = self.removeFn(self.root,node); };
+    api.remove = function(node)  {
+        self.root = self.removeFn(self.root, node);
+        self.size--;
+    };
     api.insert = function() {
         // Allow one or more values to be inserted
         if (arguments.length === 1) {
@@ -241,6 +246,7 @@ function BinaryTree (cmpFn) {
                         right:NIL,
                         p:NIL};
             self.root = self.insertFn(self.root, node, cmpFn);
+            self.size++;
         } else {
             for (var i = 0; i < arguments.length; i++) {
                 var node = {id:hashId++,
@@ -249,6 +255,7 @@ function BinaryTree (cmpFn) {
                             right:NIL,
                             p:NIL};
                 self.root = self.insertFn(self.root, node, cmpFn);
+                self.size++;
             }
         }
     };

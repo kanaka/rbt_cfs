@@ -205,13 +205,6 @@ function HeapArray (type, cmpFn) {
     api = binarytree.BinaryTree.call(self, cmpFn);
 
     self.root = [];
-    self.insertFn = function(tree, node, compareFn) {
-        delete node.left;
-        delete node.right;
-        delete node.p;
-        return heapInsert(tree, node, type, cmpFn);
-    }
-
     api.root   = function()      { return self.root; };
     api.reduce = function(r,f,o) { return heapReduce(r, self.root, f, o); };
     api.tuple  = function()      { return heapTuple(self.root); };
@@ -226,8 +219,14 @@ function HeapArray (type, cmpFn) {
     } else {
         throw new Error("Heap type must be 'min' or 'max'");
     }
-    api.remove = function() {
-        self.root = heapRemove(self.root, type, cmpFn);
+    self.removeFn = function(tree, node, compareFn) {
+        return heapRemove(tree, type, type, compareFn);
+    }
+    self.insertFn = function(tree, node, compareFn) {
+        delete node.left;
+        delete node.right;
+        delete node.p;
+        return heapInsert(tree, node, type, compareFn);
     }
 
     // Return the API functions (public interface)

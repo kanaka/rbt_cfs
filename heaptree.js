@@ -171,8 +171,7 @@ function heapRemove (tree, size, type, compareFn) {
 //     (remove top) specific to heaps.
 function HeapTree (type, cmpFn) {
     var self = this,
-        api,
-        size = 0;
+        api;
     // call parent/super constructor
     api = binarytree.BinaryTree.call(self, cmpFn);
 
@@ -183,11 +182,11 @@ function HeapTree (type, cmpFn) {
     } else {
         throw new Error("Heap type must be 'min' or 'max'");
     }
-    api.remove = function() {
-        self.root = heapRemove(self.root, size--, type, cmpFn);
+    self.removeFn = function(tree, node) {
+        return heapRemove(tree, self.size, type, cmpFn);
     }
     self.insertFn = function(tree, node, compareFn) {
-        return heapInsert(tree, size++, node, type, compareFn);
+        return heapInsert(tree, self.size, node, type, compareFn);
     }
 
 
