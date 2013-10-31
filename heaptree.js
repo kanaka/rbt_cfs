@@ -52,10 +52,6 @@ function heapBubbleDown(tree, node, type, compareFn) {
     if (typeof compareFn === 'undefined') {
         compareFn = binarytree.defaultCompareFn;
     }
-    if (type === 'max') {
-        origCompareFn = compareFn;
-        compareFn = function(n1, n2) { return - origCompareFn; };
-    }
 
     while (true) {
         var pickChild = null;
@@ -84,10 +80,6 @@ function heapBubbleDown(tree, node, type, compareFn) {
 function heapBubbleUp(tree, node, type, compareFn) {
     if (typeof compareFn === 'undefined') {
         compareFn = binarytree.defaultCompareFn;
-    }
-    if (type === 'max') {
-        origCompareFn = compareFn;
-        compareFn = function(n1, n2) { return - origCompareFn; };
     }
 
     while (node.p !== NIL) {
@@ -172,18 +164,22 @@ function heapRemove (tree, size, type, compareFn) {
 function HeapTree (type, cmpFn) {
     var self = this,
         api;
+
     // call parent/super constructor
     api = binarytree.BinaryTree.call(self, cmpFn);
 
     if (type === 'min') {
         api.min = function() { return self.root; };
     } else if (type === 'max') {
+        var origCmpFn = self.cmpFn;
+        self.cmpFn = function(n1, n2) { return - origCmpFn(n1, n2); };
+
         api.max = function() { return self.root; };
     } else {
         throw new Error("Heap type must be 'min' or 'max'");
     }
-    self.removeFn = function(tree, node) {
-        return heapRemove(tree, self.size, type, cmpFn);
+    self.removeFn = function(tree, node, compareFn) {
+        return heapRemove(tree, self.size, type, compareFn);
     }
     self.insertFn = function(tree, node, compareFn) {
         return heapInsert(tree, self.size, node, type, compareFn);

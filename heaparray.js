@@ -95,11 +95,6 @@ function heapBubbleDown(arr, idx, type, compareFn) {
     if (typeof compareFn === 'undefined') {
         compareFn = binarytree.defaultCompareFn;
     }
-    if (type === 'max') {
-        origCompareFn = compareFn;
-        compareFn = function(n1, n2) { return - origCompareFn; };
-    }
-
 
     while (true) {
         var left = 2*idx+1,
@@ -134,10 +129,6 @@ function heapBubbleDown(arr, idx, type, compareFn) {
 function heapBubbleUp(arr, idx, type, compareFn) {
     if (typeof compareFn === 'undefined') {
         compareFn = binarytree.defaultCompareFn;
-    }
-    if (type === 'max') {
-        origCompareFn = compareFn;
-        compareFn = function(n1, n2) { return - origCompareFn; };
     }
 
     while (idx > 0) {
@@ -215,6 +206,9 @@ function HeapArray (type, cmpFn) {
     if (type === 'min') {
         api.min = function() { return self.root[0]; };
     } else if (type === 'max') {
+        var origCmpFn = self.cmpFn;
+        self.cmpFn = function(n1, n2) { return - origCmpFn(n1, n2); };
+
         api.max = function() { return self.root[0]; };
     } else {
         throw new Error("Heap type must be 'min' or 'max'");

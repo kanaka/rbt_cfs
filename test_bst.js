@@ -26,6 +26,8 @@ exports.testBasics = function(test) {
     test.equal(t.reduce(0, function(r, n) { return r+n.val; }),
                225);
 
+    test.equal(t.size(), 3);
+
     test.done();
 }
 

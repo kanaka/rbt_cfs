@@ -200,7 +200,7 @@ exports.testRandom = function(test) {
         var tree = rbt.RBT();
         var insOrder = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15].shuffle();
         var remOrder = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15].shuffle();
-        console.log("Testing - insOrder " + insOrder + " remOrder " + remOrder);
+        console.log("    Testing - insOrder " + insOrder + " remOrder " + remOrder);
         testInOut(test, tree, insOrder, remOrder);
     }
 

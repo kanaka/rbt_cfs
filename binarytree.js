@@ -221,6 +221,7 @@ function BinaryTree (cmpFn) {
     var self = this,
         api = {},
         hashId = 1;
+    self.cmpFn = cmpFn;
     self.root = NIL;
     self.size = 0;
     self.insertFn = function() { throw new Error("No insertFn defined"); };
@@ -245,7 +246,7 @@ function BinaryTree (cmpFn) {
                         left:NIL,
                         right:NIL,
                         p:NIL};
-            self.root = self.insertFn(self.root, node, cmpFn);
+            self.root = self.insertFn(self.root, node, self.cmpFn);
             self.size++;
         } else {
             for (var i = 0; i < arguments.length; i++) {
@@ -254,7 +255,7 @@ function BinaryTree (cmpFn) {
                             left:NIL,
                             right:NIL,
                             p:NIL};
-                self.root = self.insertFn(self.root, node, cmpFn);
+                self.root = self.insertFn(self.root, node, self.cmpFn);
                 self.size++;
             }
         }
