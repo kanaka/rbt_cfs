@@ -3,19 +3,15 @@
 var binarytree = require('./binarytree'),
     NIL = binarytree.NIL;
 
-// bstSearch: Search the tree for value using compareFn.
+// bstSearch: Search the tree for value.
 // Returns the matching node.
 // Based on TREE-SEARCH defintion in CLRS 12.2
-function bstSearch (tree, value, compareFn) {
-    if (typeof compareFn === 'undefined') {
-        compareFn = binarytree.defaultCompareFn;
-    }
-
+function bstSearch (tree, value) {
     if (tree === NIL) {
         return null;
-    } else if (compareFn(tree, {val:value}) === 0) {
+    } else if (tree.cmp({val:value}) === 0) {
         return tree;
-    } else if (compareFn({val:value}, tree) < 0) {
+    } else if (tree.cmp({val:value}) > 0) {
         return bstSearch(tree.left, value);
     } else {
         return bstSearch(tree.right, value);
@@ -48,21 +44,17 @@ function bstMax(tree) {
     return tree;
 }
 
-// bstInsert: Add the value to the tree using compareFn to determin
-// the placement. Returns new tree (root node could have changed)
+// bstInsert: Add the value to the tree. Returns new tree (root node
+// could have changed)
 // Based on TREE-INSERT definition in CLRS 12.3
-function bstInsert (tree, node, compareFn) {
-    if (typeof compareFn === 'undefined') {
-        compareFn = binarytree.defaultCompareFn;
-    }
-
+function bstInsert (tree, node) {
     var x = tree,
         y = NIL,
         z = node;
 
     while (x !== NIL) {
         y = x;
-        if (compareFn(z, x) < 0) {
+        if (z.cmp(x) < 0) {
             x = x.left;
         } else {
             x = x.right;
@@ -73,7 +65,7 @@ function bstInsert (tree, node, compareFn) {
     if (y === NIL) {
         // tree was empty
         tree = z;
-    } else if (compareFn(z, y) < 0) {
+    } else if (z.cmp(y) < 0) {
         y.left = z;
     } else {
         y.right = z;
@@ -128,9 +120,9 @@ function bstRemove (tree, node) {
 //   - API/Methods: all binary tree methods plus search, min, max,
 //     remove, and insert.
 function BST (cmpFn) {
-    var self = this, api;
-    // call parent/super constructor
-    api = binarytree.BinaryTree.call(self, cmpFn);
+    var self = this,
+        // call parent/super constructor
+        api = binarytree.BinaryTree.call(self, cmpFn);
 
     self.insertFn = bstInsert;
     self.removeFn = bstRemove;
