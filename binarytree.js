@@ -9,6 +9,15 @@ function defaultCompareFn (node1, node2) {
     return node1.val - node2.val;
 }
 
+var STATS = {};
+function RESET_STATS () {
+    STATS = {read:  {v: 0, c: 0, p: 0, l: 0, r: 0},
+             write: {c: 0, p: 0, l: 0, r: 0},
+             compare: 0,
+             swap: 0};
+}
+RESET_STATS();
+
 var NIL;
 
 function Node(val, opts) {
@@ -35,16 +44,19 @@ function Node(val, opts) {
     });
 
     this.__defineGetter__('val', function() {
+        STATS.read.v++;
         return val;
     });
     this.__defineSetter__('val', function(arg) {
-        val = arg;
+        throw Error("Cannot set val after insert");
     });
 
     this.__defineGetter__('color', function() {
+        STATS.read.c++;
         return color;
     });
     this.__defineSetter__('color', function(arg) {
+        STATS.write.c++;
         color = arg;
     });
 
@@ -57,6 +69,7 @@ function Node(val, opts) {
 
 
     this.cmp = function(other) {
+        STATS.compare++;
         return cmpFn(this, other);
     }
 
@@ -64,6 +77,7 @@ function Node(val, opts) {
     // indexed arrays for our trees.
     if (arr) {
         this.__defineGetter__('p', function() {
+            STATS.read.p++;
             var pidx = Math.floor((idx-1)/2);
             if (pidx < 0) {
                 return NIL;
@@ -76,6 +90,7 @@ function Node(val, opts) {
         });
 
         this.__defineGetter__('left', function() {
+            STATS.read.l++;
             var lidx = 2*idx+1;
             if (lidx > arr.length-1) {
                 return NIL;
@@ -88,6 +103,7 @@ function Node(val, opts) {
         });
 
         this.__defineGetter__('right', function() {
+            STATS.read.r++;
             var ridx = 2*idx+2;
             if (ridx > arr.length-1) {
                 return NIL;
@@ -100,6 +116,7 @@ function Node(val, opts) {
         });
 
         this.swap = function(arr, other) {
+            STATS.swap++;
             var nidx = this.idx,
                 oidx = other.idx,
                 ntmp = this,
@@ -113,27 +130,34 @@ function Node(val, opts) {
 
     } else {
         this.__defineGetter__('p', function() {
+            STATS.read.p++;
             return p;
         });
         this.__defineSetter__('p', function(arg) {
+            STATS.write.p++;
             p = arg;
         });
 
         this.__defineGetter__('left', function() {
+            STATS.read.l++;
             return left;
         });
         this.__defineSetter__('left', function(arg) {
+            STATS.write.l++;
             left = arg;
         });
 
         this.__defineGetter__('right', function() {
+            STATS.read.r++;
             return right;
         });
         this.__defineSetter__('right', function(arg) {
+            STATS.write.r++;
             right = arg;
         });
 
         this.swap = function(tree, other) {
+            STATS.swap++;
             var n1 = this, n2 = other;
 
             if (n1 === NIL || n2 === NIL) {
@@ -380,6 +404,7 @@ function BinaryTree (cmpFn) {
 }
 
 exports.defaultCompareFn = defaultCompareFn;
+exports.STATS = STATS;
 exports.Node = Node;
 exports.NIL = NIL;
 exports.treeTuple = treeTuple;
