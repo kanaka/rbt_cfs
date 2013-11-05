@@ -1,8 +1,13 @@
 "use strict";
 
-var binarytree = require('./binarytree'),
-    NIL = binarytree.NIL,
-    bst = require('./bst');
+if (typeof module !== 'undefined') {
+    var binarytree = require('./binarytree'),
+        NIL = binarytree.NIL,
+        bst = require('./bst');
+} else {
+    var rbt = {},
+        exports = rbt;
+}
 
 // CLRS 13.2
 function treeLeftRotate(tree,node) {

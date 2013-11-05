@@ -1,5 +1,10 @@
 "use strict";
 
+if (typeof module === 'undefined') {
+    var binarytree = {},
+        exports = binarytree;
+}
+
 // defaultCompareFn: The default compare function.
 // Returns:
 //   0   if node1.val and node2.val are equal

@@ -1,11 +1,16 @@
 "use strict";
 
-var binarytree = require('./binarytree'),
-    NIL = binarytree.NIL,
-    heaptree = require('./heaptree');
+if (typeof module !== 'undefined') {
+    var binarytree = require('./binarytree'),
+        NIL = binarytree.NIL,
+        heaptree = require('./heaptree');
+} else {
+    var heaparray = {},
+        exports = heaparray;
+}
 
-// heapInsert: insert the node in the heap array (arr)
-function heapInsert (arr, node, type) {
+// heapArrayInsert: insert the node in the heap array (arr)
+function heapArrayInsert (arr, node, type) {
     node.idx = arr.length;
     arr.push(node);
 
@@ -15,8 +20,8 @@ function heapInsert (arr, node, type) {
     return arr;
 }
 
-// heapRemove: remove the top element
-function heapRemove (arr, node, type) {
+// heapArrayRemove: remove the top element
+function heapArrayRemove (arr, node, type) {
     // TODO: assert node is top if set
     if (arr.length <= 1) {
         arr = [];
@@ -69,16 +74,16 @@ function HeapArray (type, cmpFn) {
     });
 
     self.removeFn = function(tree, node) {
-        return heapRemove(arr, node, type);
+        return heapArrayRemove(arr, node, type);
     }
     self.insertFn = function(tree, node) {
-        return heapInsert(arr, node, type);
+        return heapArrayInsert(arr, node, type);
     }
 
     // Return the API functions (public interface)
     return api;
 }
 
-exports.heapInsert = heapInsert;
-exports.heapRemove = heapRemove;
+exports.heapArrayInsert = heapArrayInsert;
+exports.heapArrayRemove = heapArrayRemove;
 exports.HeapArray = HeapArray;

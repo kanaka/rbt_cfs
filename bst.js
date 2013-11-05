@@ -1,7 +1,12 @@
 "use strict";
 
-var binarytree = require('./binarytree'),
-    NIL = binarytree.NIL;
+if (typeof module !== 'undefined') {
+    var binarytree = require('./binarytree'),
+        NIL = binarytree.NIL;
+} else {
+    var bst = {},
+        exports = bst;
+}
 
 // bstSearch: Search the tree for value.
 // Returns the matching node.

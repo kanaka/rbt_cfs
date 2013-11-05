@@ -1,7 +1,12 @@
 "use strict";
 
-var binarytree = require('./binarytree'),
-    NIL = binarytree.NIL;
+if (typeof module !== 'undefined') {
+    var binarytree = require('./binarytree'),
+        NIL = binarytree.NIL;
+} else {
+    var heaptree = {},
+        exports = heaptree;
+}
 
 function log2(num) {
     return Math.log(num) / Math.log(2);
@@ -84,8 +89,8 @@ function heapBubbleUp(tree, node, type) {
     return tree;
 }
 
-// heapInsert: insert node into the tree
-function heapInsert (tree, size, node, type) {
+// heapTreeInsert: insert node into the tree
+function heapTreeInsert (tree, size, node, type) {
     if (tree === NIL) {
         return node;
     }
@@ -108,8 +113,8 @@ function heapInsert (tree, size, node, type) {
     return tree;
 }
 
-// heapRemove: remove the top element from tree
-function heapRemove (tree, size, type) {
+// heapTreeRemove: remove the top element from tree
+function heapTreeRemove (tree, size, type) {
     if (size === 1) {
         return NIL;
     }
@@ -163,10 +168,10 @@ function HeapTree (type, cmpFn) {
         throw new Error("Heap type must be 'min' or 'max'");
     }
     self.removeFn = function(tree, node) {
-        return heapRemove(tree, self.size, type);
+        return heapTreeRemove(tree, self.size, type);
     }
     self.insertFn = function(tree, node, compareFn) {
-        return heapInsert(tree, self.size, node, type);
+        return heapTreeInsert(tree, self.size, node, type);
     }
 
 
@@ -177,6 +182,6 @@ function HeapTree (type, cmpFn) {
 exports.heapGetLast = heapGetLast;
 exports.heapBubbleUp = heapBubbleUp;
 exports.heapBubbleDown = heapBubbleDown;
-exports.heapInsert = heapInsert;
-exports.heapRemove = heapRemove;
+exports.heapTreeInsert = heapTreeInsert;
+exports.heapTreeRemove = heapTreeRemove;
 exports.HeapTree = HeapTree;
