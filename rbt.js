@@ -97,11 +97,7 @@ function redblackInsertFixup(tree, node) {
 }
 
 // CLRS 13.3
-function redblackInsert(tree, node, compareFn) {
-    if (typeof compareFn === 'undefined') {
-        compareFn = bst.defaultCompareFn;
-    }
-
+function redblackInsert(tree, node) {
     node.color = 'r';
 
     var x = tree,
@@ -110,7 +106,7 @@ function redblackInsert(tree, node, compareFn) {
 
     while (x !== NIL) {
         y = x;
-        if (compareFn(z, x) < 0) {
+        if (z.cmp(x) < 0) {
             x = x.left;
         } else {
             x = x.right;
@@ -121,7 +117,7 @@ function redblackInsert(tree, node, compareFn) {
     if (y === NIL) {
         // tree was empty
         tree = z;
-    } else if (compareFn(z, y) < 0) {
+    } else if (z.cmp(y) < 0) {
         y.left = z;
     } else {
         y.right = z;
