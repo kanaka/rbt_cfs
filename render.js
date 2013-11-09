@@ -1,3 +1,5 @@
+var $ = function(s) { return document.querySelector(s); };
+
 var margin = {top: 20, right: 120, bottom: 20, left: 120},
     width = 960 - margin.right - margin.left,
     height = 600 - margin.top - margin.bottom;
@@ -69,6 +71,9 @@ function update(sourceTree) {
 
   root.x0 = height / 2;
   root.y0 = 0;
+
+  // Don't update the read counts while scanning the tree
+  RESET_STATS();
 
   // Compute the new tree layout.
   var nodes = tree.nodes(root).reverse(),
@@ -157,11 +162,24 @@ function update(sourceTree) {
     d.x0 = d.x;
     d.y0 = d.y;
   });
+
+  // Update the stats values
+  var reads = 0, writes = 0;
+  console.log(curTree.STATS);
+  for (var r in curTree.STATS.read) {
+    reads += curTree.STATS.read[r];
+  }
+  for (var r in curTree.STATS.write) {
+    writes += curTree.STATS.write[r];
+  }
+  $('#stats_reads').innerText = reads;
+  $('#stats_writes').innerText = writes;
+
+  // Reset the stats to be the internal one for this tree
+  RESET_STATS(curTree.STATS);
 }
 
 // Attach button/input handlers
-
-var $ = function(s) { return document.querySelector(s); };
 
 $('#treeType').onclick = function() {
     console.log(this.value);
@@ -171,6 +189,7 @@ $('#treeType').onclick = function() {
 
 $('#addOneButton').onclick = function() {
     var num = parseInt($('#addOneNumber').value, 10);
+    RESET_STATS(curTree.STATS);
     curTree.insert(num);
     update(curTree);
 }
@@ -181,9 +200,17 @@ $('#addXButton').onclick = function() {
         max = parseInt($('#addXMax').value, 10);
     for (var i=0; i < cnt; i++) {
         var num = parseInt(Math.random()*(max-min)+min, 10);
+        RESET_STATS(curTree.STATS);
         curTree.insert(num);
     }
     update(curTree);
+}
+
+// Add a STATS structure to each tree
+
+for (var t in trees) {
+    RESET_STATS();
+    trees[t].STATS = STATS;
 }
 
 update(curTree);

@@ -11,7 +11,7 @@ header h1 {
 }
 
 .control_row {
-    margin: 4px;
+    margin-bottom: 10px;
 }
 
 #svg {
@@ -40,28 +40,31 @@ header h1 {
     <header><h1>Binary Tree Visualization</h1></header>
 
     <div class="control_row">
-    Tree Type:
-    <select id="treeType">
-        <option value="bst" checked>BST
-        <option value="rbt">RBT
-        <option value="minht">Min Heap (Tree)
-        <option value="maxht">Max Heap (Tree)
-        <option value="minha">Min Heap (Array)
-        <option value="maxha">Max Heap (Array)
-    </select>
+        Tree Type:
+        <select id="treeType">
+            <option value="bst" checked>BST
+            <option value="rbt">RBT
+            <option value="minht">Min Heap (Tree)
+            <option value="maxht">Max Heap (Tree)
+            <option value="minha">Min Heap (Array)
+            <option value="maxha">Max Heap (Array)
+        </select>
+        Stats: <span id="stats_reads">0</span> reads,
+               <span id="stats_writes">0</span> writes.
     </div>
     <div class="control_row">
-    Insert One Number:
-    <input id="addOneNumber" type=text size=6>
-    <input id="addOneButton" type=button value="Insert">
     </div>
     <div class="control_row">
-    Insert <input id="addXNumber" type=text size=5 value=10> Random Numbers
-    <input id="addXMin" type=text size=5 value=1> - 
-    <input id="addXMax" type=text size=5 value=100>
-    <input id="addXButton" type=button value="Insert">
+        Insert One Number:
+        <input id="addOneNumber" type=text size=6>
+        <input id="addOneButton" type=button value="Insert">
     </div>
     <div class="control_row">
+        Insert <input id="addXNumber" type=text size=5 value=10> Random Numbers
+        <input id="addXMin" type=text size=5 value=1> - 
+        <input id="addXMax" type=text size=5 value=100>
+        <input id="addXButton" type=button value="Insert">
+    </div>
     <div id="viz">
         <svg id="svg"></svg>
     </div>
