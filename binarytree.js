@@ -314,6 +314,7 @@ function treeWalk (tree, order) {
     }, order);
 }
 
+
 // treeLinks: Return a list of links: [[a, b], [b, c]]
 // Note: an empty tree will return null
 function treeLinks (tree) {
@@ -332,26 +333,26 @@ function treeLinks (tree) {
 // treeDOT: Return DOT graph description
 // This can be fed to GraphViz to generate a rendering of the graph.
 function treeDOT(tree) {
-    var links = treeLinks(tree),
-        dot;
+    var dot;
     if ('color' in tree) {
         dot = "digraph Red_Black_Tree {\n";
     } else {
         dot = "digraph Binary_Search_Tree {\n";
     }
-    treeReduce(null, tree, function(_, n) {
-        var name = n.id + "." + n.val;
+    treeReduce(null, tree, function(_,n) {
+        dot += "  " + n.id + " [label=" + n.val;
         if (n.color === 'r') {
-            dot += '  ' + name + " [color=red];\n";
+            dot += " color=red];\n";
         } else {
-            dot += '  ' + name + " [color=black];\n";
+            dot += " color=black];\n";
+        }
+        if (n.left !== NIL) {
+            dot += "  " + n.id + " -> " + n.left.id + ";\n";
+        }
+        if (n.right !== NIL) {
+            dot += "  " + n.id + " -> " + n.right.id + ";\n";
         }
     }, 'pre');
-    for (var i = 0; i < links.length; i++) {
-        var n1 = links[i][0],
-            n2 = links[i][1];
-        dot += "  " + n1 + " -> " + n2 + ";\n";
-    }
     dot += "}";
     return dot;
 }
