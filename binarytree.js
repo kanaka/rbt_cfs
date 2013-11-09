@@ -15,11 +15,12 @@ function defaultCompareFn (node1, node2) {
 }
 
 var STATS = {};
-function RESET_STATS () {
-    STATS = {read:  {v: 0, c: 0, p: 0, l: 0, r: 0},
-             write: {c: 0, p: 0, l: 0, r: 0},
-             compare: 0,
-             swap: 0};
+function RESET_STATS (vals) {
+    vals = vals || {read:  {v: 0, c: 0, p: 0, l: 0, r: 0},
+                    write: {c: 0, p: 0, l: 0, r: 0},
+                    compare: 0,
+                    swap: 0}
+    STATS = vals;
 }
 RESET_STATS();
 

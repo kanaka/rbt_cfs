@@ -4,25 +4,41 @@ var margin = {top: 20, right: 120, bottom: 20, left: 120},
     
 var i = 0,
     duration = 750,
-    rbt = new RBT(),
+    trees = {bst: new bst.BST(),
+             rbt: new rbt.RBT(),
+             minht: new heaptree.HeapTree('min'),
+             maxht: new heaptree.HeapTree('max'),
+             minha: new heaparray.HeapArray('min'),
+             maxha: new heaparray.HeapArray('max')},
+    curTree = trees['bst'],
     root;
 
-var tree = d3.layout.tree()
+var nilIdx = 0,
+    tree = d3.layout.tree()
     .size([width, height])
     .children(function(n) {
         var c = [];
-        if (n && n !== NIL) {
-            if (n.left && n.left !== NIL) {
+        if (n.val !== 'NIL') {
+            if (n.left.val === 'NIL') {
+                c.push({id: "NIL" + (nilIdx++), p: {}, val:'NIL'});
+            } else {
                 c.push(n.left);
             }
-            if (n.right && n.right !== NIL) {
+            if (n.right.val === 'NIL') {
+                c.push({id: "NIL" + (nilIdx++), p: {}, val:'NIL'});
+            } else {
                 c.push(n.right);
             }
         }
+        console.log(n.val, c);
         return c;
     })
     .sort(function(a, b) {
-        return a.cmp(b);
+        if (a.val !== 'NIL' && b.val !== 'NIL') {
+            return a.cmp(b);
+        } else {
+            return -1;
+        }
     })
 
 var diagonal = d3.svg.diagonal()
@@ -44,8 +60,12 @@ function nodeColor(n) {
     }
 }
 
-function update() {
-  root = rbt.root();
+function update(sourceTree) {
+  root = sourceTree.root();
+
+  if (root === NIL) {
+      root = {p: {}, val: 'NIL'};
+  }
 
   root.x0 = height / 2;
   root.y0 = 0;
@@ -53,9 +73,6 @@ function update() {
   // Compute the new tree layout.
   var nodes = tree.nodes(root).reverse(),
       links = tree.links(nodes);
-
-  // Normalize for fixed-depth.
-  //nodes.forEach(function(d) { d.y = d.depth * 180; });
 
   // Update the nodes…
   var node = svg.selectAll("g.node")
@@ -75,7 +92,7 @@ function update() {
       .attr("x", function(d) { return d.children ? -10 : 10; })
       .attr("dy", ".35em")
       .attr("text-anchor", function(d) { return d.children ? "end" : "start"; })
-      .text(function(d) { return d.val; })
+      .text(function(d) { if (d.val !== 'NIL') { return d.val; }})
       .style("fill-opacity", 1e-6);
 
   // Transition nodes to their new position.
@@ -84,7 +101,13 @@ function update() {
       .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 
   nodeUpdate.select("circle")
-      .attr("r", 4.5)
+      .attr("r", function(n) {
+          if (n.val !== 'NIL') {
+              return 4.5;
+          } else {
+              return 1.5;
+          }
+      })
       .style("fill", nodeColor)
       .style("stroke", function(n) { return d3.rgb(nodeColor(n)).darker(); });
 
@@ -136,6 +159,31 @@ function update() {
   });
 }
 
-rbt.insert(50,25,75,10,15);
+// Attach button/input handlers
 
-update();
+var $ = function(s) { return document.querySelector(s); };
+
+$('#treeType').onclick = function() {
+    console.log(this.value);
+    curTree = trees[this.value];
+    update(curTree);
+}
+
+$('#addOneButton').onclick = function() {
+    var num = parseInt($('#addOneNumber').value, 10);
+    curTree.insert(num);
+    update(curTree);
+}
+
+$('#addXButton').onclick = function() {
+    var cnt = parseInt($('#addXNumber').value, 10),
+        min = parseInt($('#addXMin').value, 10),
+        max = parseInt($('#addXMax').value, 10);
+    for (var i=0; i < cnt; i++) {
+        var num = parseInt(Math.random()*(max-min)+min, 10);
+        curTree.insert(num);
+    }
+    update(curTree);
+}
+
+update(curTree);
