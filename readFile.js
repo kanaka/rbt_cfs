@@ -3,22 +3,13 @@
  */
 fs = require('fs');
 
-var num_of_tasks;
-var total_time;
-var fileName = process.argv[2];
-
-fs.readFile(fileName, 'utf8', function (err,data) {
-    if (err) {
-        return console.log(err);
-    }
-    //console.log(data);
+function readTasks (file) {
+    var data = fs.readFileSync(file, 'utf8');
 
     var input=data.split('\n');
     var line1 = input[0].split(' ');
-    num_of_tasks=parseInt(line1[0], 10);
-    total_time=parseInt(line1[1], 10);
-    console.log("Numer of Tasks:", num_of_tasks);
-    console.log("Total Time:", total_time);
+    var num_of_tasks=parseInt(line1[0], 10);
+    var total_time=parseInt(line1[1], 10);
 
     // read in the tasks
     var queue= [];
@@ -30,11 +21,21 @@ fs.readFile(fileName, 'utf8', function (err,data) {
                     duration   : parseInt(task_data[2], 10)};
         queue.push(task);
     }
+
     function sort_function (a, b) {
         return a.start_time - b.start_time;
     }
     queue.sort(sort_function);
-    console.log("Tasks:");
-    console.log(queue);
-});
+    return {num_of_tasks: num_of_tasks,
+            total_time:   total_time,
+            task_queue:   queue};
+}
+
+var fileName = process.argv[2];
+var tasks = readTasks(fileName);
+
+console.log("Numer of Tasks:", tasks.num_of_tasks);
+console.log("Total Time:", tasks.total_time);
+console.log("Task Queue:");
+console.log(tasks.task_queue);
 
