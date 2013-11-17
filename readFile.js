@@ -5,8 +5,9 @@ fs = require('fs');
 
 var num_of_tasks;
 var total_time;
+var fileName = process.argv[2];
 
-fs.readFile('/US_Univ/Fall2013/algo_project-clone/cse5311-project/data/mixed6.txt', 'utf8', function (err,data) {
+fs.readFile(fileName, 'utf8', function (err,data) {
     if (err) {
         return console.log(err);
     }
