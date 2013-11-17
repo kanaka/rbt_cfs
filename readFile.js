@@ -14,15 +14,16 @@ fs.readFile(fileName, 'utf8', function (err,data) {
     console.log(data);
 
     var input=data.split('\n');
-    num_of_tasks=input[0].substr(0,1);
-    total_time=input[0].substr(2);
+    var line1 = input[0].split(' ');
+    num_of_tasks=parseInt(line1[0], 10);
+    total_time=parseInt(line1[1], 10);
     console.log(num_of_tasks,total_time);//,task_one );
 
     //fetch starting time of all tasks and storing in timeArray
     var queue= [];
 //    var testqueue=[];
 
-    for(var j=1;j<input.length;j++){
+    for(var j=1;j<num_of_tasks;j++){
         var timeDiffArray=input[j].split(' ');
         queue.push(timeDiffArray[1]);
 //        testqueue.push(input[j]);
