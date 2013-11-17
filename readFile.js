@@ -31,6 +31,11 @@ function readTasks (file) {
             task_queue:   queue};
 }
 
+if (process.argv.length < 3) {
+    console.log("readFile TASK_FILE");
+    process.exit(2);
+}
+
 var fileName = process.argv[2];
 var tasks = readTasks(fileName);
 
