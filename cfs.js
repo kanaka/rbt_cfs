@@ -21,37 +21,31 @@ function runCFS(tasks, Tree) {
     var running_task = null;
 
     // process each task based on starting time of each task
-    for(var i=0;i<tasks.total_time;i++)
-    {
-        while(time_queue_idx < time_queue.length
-                && (time_queue[time_queue_idx].start_time<=i))
-        {
-            var new_task=time_queue[time_queue_idx++];
-            new_task.vruntime=min_vruntime;
-            new_task.truntime=0;
+    for(var curTime=0; curTime < tasks.total_time; curTime++) {
+        while(time_queue_idx < time_queue.length &&
+              (curTime >= time_queue[time_queue_idx].start_time)) {
+            var new_task = time_queue[time_queue_idx++];
+            new_task.vruntime = min_vruntime;
+            new_task.truntime = 0;
             timeline.insert(new_task);
         }
-        if(running_task && (running_task.vruntime > min_vruntime))
-        {
+        if(running_task && (running_task.vruntime > min_vruntime)) {
             timeline.insert(running_task);
             running_task = null;
         }
 
-        if (running_task==null && timeline.size() > 0)
-        {
+        if (!running_task && timeline.size() > 0) {
             var min_node = timeline.min();
             running_task = min_node.val;
             timeline.remove(min_node);
-            if (timeline.size() > 0)
-            {
+            if (timeline.size() > 0) {
                 min_vruntime = timeline.min().val.vruntime
             }
         }
-        if(running_task!=null)
-        {
+        if (running_task) {
             running_task.vruntime++;
             running_task.truntime++;
-            console.log(i + ": " + running_task.id);
+            console.log(curTime + ": " + running_task.id);
             if (running_task.truntime >= running_task.duration) {
                 console.log("Completed task:", running_task.id);
                 running_task = null;

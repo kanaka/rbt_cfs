@@ -15,7 +15,7 @@ function readTasks (file) {
     // read in the tasks
     var queue= [];
 
-    for(var j=1;j<=num_of_tasks;j++) {
+    for(var j=1; j <= num_of_tasks; j++) {
         var task_data=input[j].split(' ');
         var task = {id         :          task_data[0],
                     start_time : parseInt(task_data[1], 10),
