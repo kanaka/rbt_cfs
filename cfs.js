@@ -13,6 +13,7 @@ function runCFS(tasks, Tree) {
     }
 
     var time_queue = tasks.task_queue;
+    var time_queue_idx = 0;
 
     var timeline = new Tree(function (a, b) {
         return a.val.vruntime - b.val.vruntime; });
@@ -22,9 +23,10 @@ function runCFS(tasks, Tree) {
     // process each task based on starting time of each task
     for(var i=0;i<tasks.total_time;i++)
     {
-        while(time_queue.length > 0 && (time_queue[0].start_time<=i))
+        while(time_queue_idx < time_queue.length
+                && (time_queue[time_queue_idx].start_time<=i))
         {
-            var new_task=time_queue.shift();
+            var new_task=time_queue[time_queue_idx++];
             new_task.vruntime=min_vruntime;
             new_task.truntime=0;
             timeline.insert(new_task);
