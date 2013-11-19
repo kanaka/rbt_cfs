@@ -1,5 +1,5 @@
 # CSE5311 Project
 
-## Section 1
+## Example of using the CFS algorithm
 
-## Section 2
+node ./cfs.js data/simple3.txt
