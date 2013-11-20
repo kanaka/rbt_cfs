@@ -84,9 +84,9 @@ if (require.main === module) {
         process.exit(2);
     }
 
-    var readTasksModule = require('./readTasks');
+    var tasksModule = require('./tasks');
     var fileName = process.argv[2];
-    var tasks = readTasksModule.readTasks(fileName);
+    var tasks = tasksModule.readTasks(fileName);
 
     var timeline = new rbt.RBT(function (a, b) {
             return a.val.vruntime - b.val.vruntime; });
