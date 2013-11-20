@@ -2,6 +2,7 @@
 /**
  * Created by Kanthanarasimhaiah on 14/11/13.
  */
+
 fs = require('fs');
 
 function readTasks (file) {
@@ -33,6 +34,8 @@ function readTasks (file) {
 }
 
 if (require.main === module) {
+    // we are being run directly so load the file specified and print
+    // the data from the file
     if (process.argv.length < 3) {
         console.log("readFile TASK_FILE");
         process.exit(2);
@@ -46,5 +49,7 @@ if (require.main === module) {
     console.log("Task Queue:");
     console.log(tasks.task_queue);
 } else {
+    // we are being required as a module so export the readTasks
+    // function
     exports.readTasks = readTasks;
 }
