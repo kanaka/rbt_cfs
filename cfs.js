@@ -60,9 +60,9 @@ if (require.main === module) {
         process.exit(2);
     }
 
-    var readTasks = require('./readTasks').readTasks;
+    var readTasksModule = require('./readTasks');
     var fileName = process.argv[2];
-    var tasks = readTasks(fileName);
+    var tasks = readTasksModule.readTasks(fileName);
 
     console.log("Numer of Tasks:", tasks.num_of_tasks);
     console.log("Total Time:", tasks.total_time);
