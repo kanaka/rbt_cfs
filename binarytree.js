@@ -15,6 +15,9 @@ function defaultCompareFn (node1, node2) {
 }
 
 var STATS = {};
+function GET_STATS () {
+    return STATS;
+}
 function RESET_STATS (vals) {
     vals = vals || {read:  {v: 0, c: 0, p: 0, l: 0, r: 0},
                     write: {c: 0, p: 0, l: 0, r: 0},
@@ -411,7 +414,8 @@ function BinaryTree (cmpFn) {
 }
 
 exports.defaultCompareFn = defaultCompareFn;
-exports.STATS = STATS;
+exports.GET_STATS = GET_STATS;
+exports.RESET_STATS = RESET_STATS;
 exports.Node = Node;
 exports.NIL = NIL;
 exports.treeTuple = treeTuple;
