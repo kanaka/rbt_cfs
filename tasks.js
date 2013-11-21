@@ -28,6 +28,7 @@ function readTasks (file) {
         return a.start_time - b.start_time;
     }
     queue.sort(sort_function);
+    console.log(queue);
     return {num_of_tasks: num_of_tasks,
             total_time:   total_time,
             task_queue:   queue};
