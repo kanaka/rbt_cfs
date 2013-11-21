@@ -103,9 +103,6 @@ function generate_report(tasks, results, detailed) {
     var reads = 0, writes = 0, total = 0, completed = 0;
 
     // General info on the original tasks
-    console.log("Numer of Tasks:", tasks.num_of_tasks);
-    console.log("Total Time:", tasks.total_time);
-
     if (detailed) {
         console.log("Task Queue:");
         console.log(tasks.task_queue);
@@ -114,16 +111,18 @@ function generate_report(tasks, results, detailed) {
     // A chronological summary of the state at each time
     if (detailed) {
         console.log("\ntime [tasks]: running_task, completed?");
-        for (var i=0; i < results.time_data.length; i++) {
-            var t = results.time_data[i],
-                msg = "  " + i + " [" + t.num_tasks + "]: ";
-            if (t.running_task) {
-                msg += t.running_task.id;
-            }
-            if (t.completed_task) {
-                msg += ", Completed";
-                completed++;
-            }
+    }
+    for (var i=0; i < results.time_data.length; i++) {
+        var t = results.time_data[i],
+            msg = "  " + i + " [" + t.num_tasks + "]: ";
+        if (t.running_task) {
+            msg += t.running_task.id;
+        }
+        if (t.completed_task) {
+            msg += ", Completed";
+            completed++;
+        }
+        if (detailed) {
             console.log(msg);
         }
     }
@@ -138,7 +137,11 @@ function generate_report(tasks, results, detailed) {
     total = reads+writes;
 
     // Report summary statistics
-    console.log("Wallclock elapsed time: " + results.elapsed_ms + "ms")
+    console.log("Total Tasks:", tasks.num_of_tasks);
+    console.log("Completed Tasks:", completed);
+    console.log("Total Time:", tasks.total_time);
+
+    console.log("Wallclock elapsed time: " + results.elapsed_ms + "ms");
     console.log("Node operations reads  : " + reads);
     console.log("                writes : " + writes);
     console.log("                total  : " + total);
@@ -165,6 +168,7 @@ if (require.main === module) {
 
     // Run the CFS algorithm and generate a results report
     var results = runCFS(tasks, timeline);
+    //generate_report(tasks, results, true);
     generate_report(tasks, results);
 
 } else {
