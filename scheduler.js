@@ -174,5 +174,6 @@ if (require.main === module) {
 } else {
     // we are being required as a module so export the runCFS function
     exports.runCFS = runCFS;
+    exports.generate_report = generate_report;
 }
 
