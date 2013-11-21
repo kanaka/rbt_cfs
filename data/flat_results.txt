@@ -1,0 +1,36 @@
+flat1.txt:
+reads+writes: 6264
+Node reads: 100
+Node writes: 80
+reads+writes: 180
+Wallclock elapsed time: 3ms
+
+flat2.txt:
+Node reads: 180
+Node writes: 98
+reads+writes: 278
+Wallclock elapsed time: 3ms
+
+flat4.txt:
+Node reads: 1472
+Node writes: 513
+reads+writes: 1985
+Wallclock elapsed time: 10ms
+
+flat8.txt:
+Node reads: 4938
+Node writes: 1326
+reads+writes: 6264
+Wallclock elapsed time: 22ms
+
+flat16.txt:
+Node reads: 12793
+Node writes: 3306
+reads+writes: 16099
+Wallclock elapsed time: 38ms
+
+flat32.txt:
+Node reads: 31397
+Node writes: 7339
+reads+writes: 38736
+Wallclock elapsed time: 61ms
