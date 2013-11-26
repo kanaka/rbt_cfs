@@ -1,5 +1,7 @@
 bst = require('./bst');
 rbt = require('./rbt');
+heaptree = require('./heaptree');
+heaparray = require('./heaparray');
 sched = require('./scheduler');
 
 function generate_tasks (n, duration) {
@@ -28,12 +30,43 @@ function run_tasks (pow1, pow2, timeline) {
     }
 }
 
-var bst_timeline = new bst.BST(function (a, b) {
-        return a.val.vruntime - b.val.vruntime; });
-var rbt_timeline = new rbt.RBT(function (a, b) {
-        return a.val.vruntime - b.val.vruntime; });
+function usage() {
+    console.log("node run_tasks.js [bst|rbt|heaptree|heaparray] START_FACTOR END_FACTOR");
+    process.exit(2);
+}
 
-console.log("Running with BST:");
-run_tasks(10, 10, bst_timeline);
-console.log("Running with RBT:");
-run_tasks(10, 10, rbt_timeline);
+if (process.argv.length < 5) {
+    usage();
+}
+
+function vsort(a,b) {
+    return a.val.vruntime - b.val.vruntime;
+}
+
+var mode, Timeline;
+switch (process.argv[2].toLowerCase()) {
+    case 'bst':
+        mode="BST";
+        timeline = new bst.BST(vsort);
+        break;
+    case 'rbt':
+        mode="RBT";
+        timeline = new rbt.RBT(vsort);
+        break;
+    case 'heaptree':
+        mode="HeapTree";
+        timeline = new heaptree.HeapTree('min', vsort);
+        break;
+    case 'heaparray':
+        mode="HeapArray";
+        timeline = new heaparray.HeapArray('min', vsort);
+        break;
+    default:
+        usage();
+}
+
+var start_factor = parseInt(process.argv[3],10),
+    end_factor = parseInt(process.argv[4],10);
+
+console.log("Running with:", mode);
+run_tasks(start_factor, end_factor, timeline);
