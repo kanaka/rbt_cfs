@@ -24,10 +24,8 @@ function heapArrayInsert (arr, node, type) {
 function heapArrayRemove (arr, node, type) {
     // TODO: assert node is top if set
     if (arr.length <= 1) {
-        arr = [];
-    }
-
-    if (arr.length > 1) {
+        arr.pop();
+    } else {
         // Move the last element to the top
         var n = arr.pop();
         n.idx = 0;

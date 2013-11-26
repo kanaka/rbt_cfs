@@ -125,7 +125,7 @@ function heapTreeRemove (tree, size, type) {
         lparent = np[1];
 
     // Swap the top and last elements
-    tree = binarytree.treeSwap(tree, remove, last);
+    tree = remove.swap(tree, last);
 
     // Remove the new last element
     if (remove.p.left === remove) {

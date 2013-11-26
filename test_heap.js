@@ -125,7 +125,7 @@ exports.testInsertHeapTree = function(test) {
 }
 
 exports.testRemoveHeapTree = function(test) {
-    insertTests(test, heaptree.HeapTree);
+    removeTests(test, heaptree.HeapTree);
     test.done();
 }
 
@@ -146,6 +146,6 @@ exports.testInsertHeapArray = function(test) {
 }
 
 exports.testRemoveHeapArray = function(test) {
-    insertTests(test, heaparray.HeapArray);
+    removeTests(test, heaparray.HeapArray);
     test.done();
 }
