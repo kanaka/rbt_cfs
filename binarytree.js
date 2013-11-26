@@ -19,8 +19,8 @@ function GET_STATS () {
     return STATS;
 }
 function RESET_STATS (vals) {
-    vals = vals || {read:  {v: 0, c: 0, p: 0, l: 0, r: 0},
-                    write: {c: 0, p: 0, l: 0, r: 0},
+    vals = vals || {read:  {c: 0, p: 0, l: 0, r: 0, idx: 0, v: 0},
+                    write: {c: 0, p: 0, l: 0, r: 0, idx: 0},
                     compare: 0,
                     swap: 0}
     STATS = vals;
@@ -70,9 +70,11 @@ function Node(val, opts) {
     });
 
     this.__defineGetter__('idx', function() {
+        STATS.read.idx++;
         return idx;
     });
     this.__defineSetter__('idx', function(arg) {
+        STATS.write.idx++;
         idx = arg;
     });
 
@@ -132,6 +134,7 @@ function Node(val, opts) {
                 otmp = other;
             arr[nidx] = otmp;
             arr[oidx] = ntmp;
+            STATS.write.p += 2; // NOTE: not really p, but keep track
             this.idx = oidx;
             other.idx = nidx;
             return arr;
