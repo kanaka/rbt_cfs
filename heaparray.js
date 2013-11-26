@@ -1,5 +1,6 @@
 "use strict";
 
+// Node vs browser behavior
 if (typeof module !== 'undefined') {
     var binarytree = require('./binarytree'),
         NIL = binarytree.NIL,

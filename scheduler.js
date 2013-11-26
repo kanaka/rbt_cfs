@@ -1,13 +1,16 @@
 #!/usr/bin/env node
-/**
- * Created by Kanthanarasimhaiah on 14/11/13.
- */
 
-var binarytree = require('./binarytree'),
-    rbt = require('./rbt.js');
+// Node vs browser behavior
+if (typeof module !== 'undefined') {
+    var binarytree = require('./binarytree'),
+        rbt = require('./rbt.js');
+} else {
+    var scheduler = {},
+        exports = scheduler;
+}
 
-// Run CFS algorithm
-function runCFS(tasks, timeline) {
+// runScheduler: Run CFS algorithm
+function runScheduler(tasks, timeline) {
     // queue of tasks sorted in start_time order
     var time_queue = tasks.task_queue;
     // index into time_queue of the next nearest task to start
@@ -150,30 +153,33 @@ function generate_report(tasks, results, detailed) {
     //console.log("Tasks per tick:", tasks_per_tick);
 }
 
-if (require.main === module) {
+if (typeof require !== 'undefined' && require.main === module) {
     // we are being run directly so load the task file specified on
-    // the command line pass the data to runCFS using an RedBlackTree
-    // for the timeline
+    // the command line pass the data to runScheduler using an
+    // RedBlackTree for the timeline
     if (process.argv.length < 3) {
         console.log("cfs TASK_FILE");
         process.exit(2);
     }
 
+    var fs = require('fs');
     var tasksModule = require('./tasks');
     var fileName = process.argv[2];
-    var tasks = tasksModule.readTasks(fileName);
+    var data = fs.readFileSync(fileName, 'utf8');
+    var tasks = tasksModule.parseTasks(data);
 
     var timeline = new rbt.RBT(function (a, b) {
             return a.val.vruntime - b.val.vruntime; });
 
     // Run the CFS algorithm and generate a results report
-    var results = runCFS(tasks, timeline);
+    var results = runScheduler(tasks, timeline);
     //generate_report(tasks, results, true);
     generate_report(tasks, results);
 
 } else {
-    // we are being required as a module so export the runCFS function
-    exports.runCFS = runCFS;
+    // we are being required as a module so export the runScheduler
+    // function
+    exports.runScheduler = runScheduler;
     exports.generate_report = generate_report;
 }
 

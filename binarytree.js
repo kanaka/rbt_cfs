@@ -1,5 +1,6 @@
 "use strict";
 
+// Node vs browser behavior
 if (typeof module === 'undefined') {
     var binarytree = {},
         exports = binarytree;
@@ -14,6 +15,7 @@ function defaultCompareFn (node1, node2) {
     return node1.val - node2.val;
 }
 
+// Statistics tracking.
 var STATS = {};
 function GET_STATS () {
     return STATS;
@@ -29,6 +31,10 @@ RESET_STATS();
 
 var NIL;
 
+// The Node object is used as the basis for all the binary tree
+// derived structures. Pointer related operations diverge depending on
+// whether the tress are linked together using regular pointers or are
+// laid out in an array with children at 2i+1 and 2i+2.
 function Node(val, opts) {
     var id = Node.nextId++;
 
@@ -44,7 +50,9 @@ function Node(val, opts) {
         arr = opts.arr || null,
         idx = 0;
 
-    // Common functions/getters/setters
+    // Common functions/getters/setters. These are wrapped (rather
+    // than direct properties) in order to capture statistics about
+    // read/write access.
     this.__defineGetter__('id', function() {
         return id;
     });
@@ -79,6 +87,8 @@ function Node(val, opts) {
     });
 
 
+    // Use the compare function we were initialized with to compare
+    // ourself with another node.
     this.cmp = function(other) {
         STATS.compare++;
         return cmpFn(this, other);
@@ -128,13 +138,13 @@ function Node(val, opts) {
 
         this.swap = function(arr, other) {
             STATS.swap++;
+            STATS.write.p += 2; // NOTE: not really p, but keep track there
             var nidx = this.idx,
                 oidx = other.idx,
                 ntmp = this,
                 otmp = other;
             arr[nidx] = otmp;
             arr[oidx] = ntmp;
-            STATS.write.p += 2; // NOTE: not really p, but keep track
             this.idx = oidx;
             other.idx = nidx;
             return arr;
@@ -294,7 +304,10 @@ function treeTuple (tree) {
     return res;
 }
 
-// treeReduce: 
+// treeReduce: walk the tree in the order specified, running the
+// action function against each node and accumulating the result in
+// result. The action function is called with the current result and
+// the node that is currently being processed.
 // Returns the final reduced result
 function treeReduce (result, node, action, order) {
     order = order||"in";  // pre, in, or post
