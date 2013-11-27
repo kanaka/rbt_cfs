@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 bst = require('./bst');
 rbt = require('./rbt');
 heaptree = require('./heaptree');
