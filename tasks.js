@@ -39,6 +39,22 @@ function parseTasks (data) {
             task_queue:   queue};
 }
 
+// generateTasks: generate n tasks that each start at time 1 and all
+// run for duration
+function generateTasks (n, duration) {
+    var queue = [];
+    for (var i=0; i<n; i++) {
+        var task = {id: "t" + i,
+                    start_time: 1,
+                    duration: duration};
+        queue.push(task);
+    }
+    return {num_of_tasks: n,
+            total_time: n*duration+1,
+            task_queue: queue};
+}
+
+
 if (typeof require !== 'undefined' && require.main === module) {
     // we are being run directly so load the file specified and print
     // the data from the file
@@ -60,4 +76,5 @@ if (typeof require !== 'undefined' && require.main === module) {
     // we are being required as a module so export the parseTasks
     // function
     exports.parseTasks = parseTasks;
+    exports.generateTasks = generateTasks;
 }

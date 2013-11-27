@@ -2,21 +2,8 @@ bst = require('./bst');
 rbt = require('./rbt');
 heaptree = require('./heaptree');
 heaparray = require('./heaparray');
+tasks = require('./tasks');
 sched = require('./scheduler');
-
-// Generate n tasks that each start at time 1 and all run for duration
-function generate_tasks (n, duration) {
-    var queue = [];
-    for (var i=0; i<n; i++) {
-        var task = {id: "t" + i,
-                    start_time: 1,
-                    duration: duration};
-        queue.push(task);
-    }
-    return {num_of_tasks: n,
-            total_time: n*duration+1,
-            task_queue: queue};
-}
 
 // Using timeline for the timeline tree structure, generate a task
 // queue for each of size 2^pow1 to 2^pow2 and do runScheduler and
@@ -24,12 +11,12 @@ function generate_tasks (n, duration) {
 function run_tasks (pow1, pow2, timeline) {
     for (var i=pow1; i<=pow2; i++) {
         var num_tasks = Math.pow(2,i);
-        var tasks = generate_tasks(num_tasks, 10);
+        var taskdata = tasks.generateTasks(num_tasks, 10);
 
         // Run the CFS algorithm and generate a results report
-        var results = sched.runScheduler(tasks, timeline);
+        var results = sched.runScheduler(taskdata, timeline);
 
-        sched.generate_report(tasks, results);
+        sched.generate_report(taskdata, results);
         console.log("\n");
     }
 }
