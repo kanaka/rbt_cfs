@@ -10,7 +10,7 @@ if (typeof module !== 'undefined') {
 }
 
 // runScheduler: Run CFS algorithm
-function runScheduler(tasks, timeline) {
+function runScheduler(tasks, timeline, callback) {
     // queue of tasks sorted in start_time order
     var time_queue = tasks.task_queue;
     // index into time_queue of the next nearest task to start
@@ -73,12 +73,11 @@ function runScheduler(tasks, timeline) {
             }
         }
 
-        tresults.num_tasks = timeline.size() + (running_task ? 1 : 0);
-
         // Update the running_task (if any) by increasing the vruntime
         // and the truntime. If the running task has run for it's full
         // duration then report it as completed and set running_task
         // to null.
+        var task_done = false;
         if (running_task) {
             running_task.vruntime++;
             running_task.truntime++;
@@ -87,12 +86,21 @@ function runScheduler(tasks, timeline) {
             if (running_task.truntime >= running_task.duration) {
                 running_task.completed_time = curTime;
                 tresults.completed_task = running_task
-                running_task = null;
+                task_done = true; // Set running_task to null later
                 //console.log("Completed task:", running_task.id);
             }
         }
 
+        tresults.num_tasks = timeline.size() + (running_task ? 1 : 0);
+
         results.time_data[curTime] = tresults;
+        if (callback) {
+            callback(curTime, results);
+        }
+
+        if (task_done) {
+            running_task = null;
+        }
     }
 
     //binarytree.RESET_STATS();
