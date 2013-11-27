@@ -65,9 +65,9 @@ sched.runScheduler(tasks, timeline, function(curTime, results) {
     var t = results.time_data[curTime],
         res = [curTime, t.num_tasks]
     if (t.running_task) {
-        res.push("'" + t.running_task.id + "'");
+        res.push("\"" + t.running_task.id + "\"");
     } else {
-        res.push("''");
+        res.push("\"\"");
     }
     if (t.completed_task) {
         res.push(true);
