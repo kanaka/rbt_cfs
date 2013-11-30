@@ -51,13 +51,24 @@ switch (process.argv[2].toLowerCase()) {
         usage();
 }
 
+// Scheduler Fairness: ideal_truntime is the amount of truntime that
+// a task should have at the current time unit/tick under ideal
+// conditions (a perfectly subdividable CPU). The ideal_truntime is
+// often fractional whereas the actual truntime is a whole number. For
+// example, if there are two tasks, then after the first time
+// unit/tick, each task will have an ideal_truntime of 0.5, whereas
+// the actual truntime will be 1 for the task that actually ran and
+// 0 for the task that did not run. After the next tick both tasks
+// will have an ideal_truntime of 1 and both will also have an actual
+// truntime of 1.
+
 // Run the CFS algorithm and generate a results report
 var header = "time,num_tasks,running_task_id,completed"
 for (var j=0; j < tasks.task_queue.length; j++) {
     var task = tasks.task_queue[j];
     header += "," + task.id + "_t";
     header += "," + task.id + "_f";
-    task.num_tasks_history = [];
+    task.ideal_truntime = 0;
 }
 console.log(header);
 
@@ -77,19 +88,19 @@ sched.runScheduler(tasks, timeline, function(curTime, results) {
     for (var j=0; j < tasks.task_queue.length; j++) {
         var task = tasks.task_queue[j];
         if (task.actual_start_time && task.hide !== true) {
-            task.num_tasks_history.push(t.num_tasks);
-            var tasks_sum = task.num_tasks_history.reduce(function(a,b) {
-                return a+b; }),
-                tasks_avg = tasks_sum/task.num_tasks_history.length,
-                elapsed = (curTime-task.actual_start_time+1);
             if (task.truntime >= task.duration) {
                 task.hide = true;
             }
             res.push(" " + task.truntime);
-            //console.log(task.num_tasks_history);
-            //console.log("Task " + task.id + " ratio of " + tasks_avg + " avg tasks: " +
-            //(1.0/tasks_avg) + ", ratio of " + elapsed + " time: " + task.truntime/elapsed);
-            var fairness = (task.truntime/elapsed)/(1.0/tasks_avg);
+            // Calculate the fairness: ideal_truntime is the basically
+            // the exact fractional ratio of the CPU time that this
+            // task should have had at this point in time.
+            task.ideal_truntime += 1.0/t.num_tasks;
+            // The fairness is the ratio of actual truntime that this
+            // task over the ideal_truntime for this task. A fairness
+            // value of 1 means this task has actually run for the
+            // a perfectly fair amount of truntime.
+            var fairness = task.truntime/task.ideal_truntime;
             res.push(fairness.toFixed(2));
         } else {
             res.push(" ");
