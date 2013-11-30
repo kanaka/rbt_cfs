@@ -166,7 +166,7 @@ if (typeof require !== 'undefined' && require.main === module) {
     // the command line pass the data to runScheduler using an
     // RedBlackTree for the timeline
     if (process.argv.length < 3) {
-        console.log("cfs TASK_FILE");
+        console.log("node scheduler.js TASK_FILE");
         process.exit(2);
     }
 
