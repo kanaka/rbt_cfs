@@ -13,7 +13,7 @@ sched = require('./scheduler');
 function run_tasks (pow1, pow2, timeline) {
     for (var i=pow1; i<=pow2; i++) {
         var num_tasks = Math.pow(2,i);
-        var taskdata = tasks.generateTasks(num_tasks, 10);
+        var taskdata = tasks.generateTasks(num_tasks, 1, 10);
 
         // Run the CFS algorithm and generate a results report
         var results = sched.runScheduler(taskdata, timeline);
