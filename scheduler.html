@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Completely Fair Scheduler with RBT</title>
+
+    <style>
+        h3{
+            text-align: center;
+        }
+        div
+        {
+            outline-style: dashed;
+            height: 80%;
+            width: 50%;
+            outline-color: blueviolet;
+
+        }
+    </style>
+
+</head>
+<body>
+<div></br>
+    <h3>Task Scheduler Implementation</h3></br>
+
+    &emsp;&emsp;<label>Choose the Tasks file for Scheduling</label></br>
+    &emsp;&emsp;<input id="fileInput" type="file" size="5" /></br></br>
+
+    &emsp;&emsp;<label>Select Datatype to run the scheduler</label></br>
+    &emsp;&emsp;<select id="dataStructure">
+        <option value="1" name="red-black-tree">Red Black Tree</option>
+        <option value="2" name="heap">Heap</option>
+    </select></br>
+    &emsp;&emsp;<input id="runButton" type="submit" size="5" value="Run Scheduler"/></br></br>
+
+    &emsp;&emsp;<pre id="schedulerOutput" cols="50" rows="20"></pre>
+</div>
+
+<script src="browser.js"></script>
+</body>
+</html>

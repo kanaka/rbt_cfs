@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+//#!/usr/bin/env node
 
 // Node vs browser behavior
 if (typeof module !== 'undefined') {

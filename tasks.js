@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+//#!/usr/bin/env node
 
 // Node vs browser behavior
 if (typeof module === 'undefined') {
@@ -68,7 +68,7 @@ if (typeof require !== 'undefined' && require.main === module) {
     var data = fs.readFileSync(fileName, 'utf8');
     var tasks = parseTasks(data);
 
-    console.log("Numer of Tasks:", tasks.num_of_tasks);
+    console.log("Number of Tasks:", tasks.num_of_tasks);
     console.log("Total Time:", tasks.total_time);
     console.log("Task Queue:");
     console.log(tasks.task_queue);
