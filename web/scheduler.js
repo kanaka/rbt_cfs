@@ -24,8 +24,10 @@ window.onload = function () {
 
     $("#runButton").addEventListener('click', function () {
         try {
-            var rawTasksString = $("#rawTasksFile").innerHTML;
+            var rawTasksString = $("#rawTasksFile").value;
+            console.log(rawTasksString);
             var tasksData = tasks.parseTasks(rawTasksString);
+            console.log(tasksData);
         } catch (e) {
             console.error(e.stack);
             alert("Error parsing task data: " + e);
@@ -38,9 +40,14 @@ window.onload = function () {
 
         var sR = $("#schedulerResults"),
             tT = $("#treeType"),
+            report = $("#report").checked,
             detailed = $("#detailed").checked;
-        sR.innerHTML += "Running scheduler with: " + timeline.name + "\n";
-        sR.innerHTML += scheduler.generateReport(tasksData, results, detailed);
+        console.log(results);
+        sR.innerHTML += scheduler.generateSummary(tasksData, timeline, results);
+        if (report || detailed) {
+            sR.innerHTML += "Running scheduler with: " + timeline.name + "\n";
+            sR.innerHTML += scheduler.generateReport(tasksData, results, detailed);
+        }
         sR.innerHTML += "\n";
     });
 

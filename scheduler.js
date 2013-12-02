@@ -10,7 +10,7 @@ if (typeof module !== 'undefined') {
         exports = scheduler;
 }
 
-// runScheduler: Run CFS algorithm
+// runScheduler: Run scheduler algorithm
 function runScheduler(tasks, timeline, callback) {
     // queue of tasks sorted in start_time order
     var time_queue = tasks.task_queue;
@@ -116,6 +116,27 @@ function runScheduler(tasks, timeline, callback) {
     return results;
 }
 
+function generateSummary(tasks, timeline, results) {
+    var out = "", tnodes = [], hvals = [];
+    timeline.reduce(null, function (_, node) {
+        var task = node.val;
+        tnodes.push(task.id + ":" + task.vruntime +
+                    (node.color ? "/" + node.color : ""));
+    }, "in");
+
+    for (var i=0; i < results.time_data.length; i++) {
+        var t = results.time_data[i];
+        hvals.push(t.running_task ? t.running_task.id : "_");
+    }
+    out += "Timeline: ";
+    out += tnodes.join(",");
+    out += "\nTask history: ";
+    out += hvals.join(",");
+    out += "\n";
+    return out;
+    
+}
+
 function generateReport(tasks, results, detailed) {
     var reads = 0, writes = 0, total = 0, completed = 0, out = "";
 
@@ -191,7 +212,7 @@ function getTimelineByName(name) {
 }
 
 function usage() {
-    console.log("node scheduler.js [--detailed] bst|rbt|heaptree|heaparray TASK_FILE");
+    console.log("node scheduler.js [--report|--detailed] bst|rbt|heaptree|heaparray TASK_FILE");
     process.exit(2);
 }    
 
@@ -205,28 +226,36 @@ if (typeof require !== 'undefined' && require.main === module) {
 
     var fs = require('fs');
     var tasksModule = require('./tasks');
-    var detailed = false;
+    var report = false, detailed = false;
 
-    if (process.argv[2] === '--detailed') {
-        detailed = true;
-        process.argv.splice(2,1);
+    switch (process.argv[2]) {
+        case '--detailed':
+            detailed = true; // fall through
+        case '--report':
+            report = true;
+            process.argv.splice(2,1);
     }
     var timeline = getTimelineByName(process.argv[2]);
     var fileName = process.argv[3];
     var data = fs.readFileSync(fileName, 'utf8');
     var tasks = tasksModule.parseTasks(data);
 
-    // Run the CFS algorithm and generate a results report
+    // Run the scheduler algorithm
     var results = runScheduler(tasks, timeline);
 
+    // Print the summary information
+    console.log(generateSummary(tasks, timeline, results));
+
     // Print a report from the results
-    console.log("Running with:", timeline.name);
-    console.log(generateReport(tasks, results, detailed));
+    if (report || detailed) {
+        console.log("Running with:", timeline.name);
+        console.log(generateReport(tasks, results, detailed));
+    }
 } else {
     // we are being required as a module so export the runScheduler
     // function
     exports.runScheduler = runScheduler;
+    exports.generateSummary = generateSummary;
     exports.generateReport = generateReport;
     exports.getTimelineByName = getTimelineByName;
 }
-
