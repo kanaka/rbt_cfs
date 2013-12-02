@@ -1,69 +1,59 @@
-if (typeof module !== 'undefined') {
-    var fs = require('fs');
-    var binarytree = require('./binarytree'),
-        rbt = require('./rbt'),
-    tasksModule = require('./tasks'),
-//        parse = require('./parsetasks'),
-        scheduler = require('./scheduler');
+if (!window.FileReader) {
+    throw new Error("Browser missing FileReader API");
 }
 
+var $ = function(s) { return document.querySelector(s); };
+
 window.onload = function () {
-    var textFile;
-    var file;
-    var displayArea;
-    var fileName;
-    var picReader;
     //Check File API support
-    if (window.File && window.FileList && window.FileReader) {
-        var filesInput = document.getElementById("fileInput");
-        displayArea = document.getElementById("schedulerOutput");
+    var timeline;
 
-        fileInput.addEventListener('change', function (e) {
-            file = filesInput.files[0]; //File object
-
-            if (file) {
-                picReader = new FileReader();
-                picReader.addEventListener("load", function (event) {
-                    textFile = event.target;
-                    displayArea.innerText = textFile.result;
-                });
-                //Read the text file
-                picReader.readAsText(file);
-
-            }
-        });
-    }
-    else {
-        console.log("Your browser does not support File API");
-    }
-    var dataStructure = document.getElementById("dataStructure");
-    var runCall = document.getElementById("runButton");
-    runCall.addEventListener('click', function () {
-        if (textFile) {
-            //fileName = picReader;
-            var data = fs.readFileSync(file.name, 'utf8');
-            var selectedDataStructure = dataStructure.options[dataStructure.selectedIndex].text;
-            alert("calling with " + selectedDataStructure + " " + file.name);
-            var tasks = tasksModule.parseTasks(data);
-
-            var timeline = new rbt.RBT(function (a, b) {
-                return a.val.vruntime - b.val.vruntime;
-            });
-
-            // Run the CFS algorithm and generate a results report
-            var results = scheduler.runScheduler(tasks, timeline);
-
-            scheduler.generate_report(tasks, results);
+    function getTimeline(treetype) {
+        function tsort(a, b) {
+            return a.val.vruntime - b.val.vruntime;
         }
 
-        else
-            displayArea.innerText = "      Select Input File to Run Scheduler"
+        var trees = {bst: new bst.BST(tsort),
+                     rbt: new rbt.RBT(tsort),
+                     minht: new heaptree.HeapTree('min', tsort),
+                     minha: new heaparray.HeapArray('min', tsort)};
+        return trees[treetype];
+    }
 
+    $("#fileInput").addEventListener('change', function (e) {
+        var file = e.target.files[0]; //File object
+            fReader = new FileReader();
+
+        if (file) {
+            fReader.addEventListener("load", function (event) {
+                $("#rawTasksFile").innerHTML = event.target.result;
+            });
+            //Read the text file
+            fReader.readAsText(file);
+            console.log("Loaded " + file.name);
+        }
+    });
+
+    $("#runButton").addEventListener('click', function () {
+        try {
+            var rawTasksString = $("#rawTasksFile").innerHTML;
+            var tasksData = tasks.parseTasks(rawTasksString);
+        } catch (e) {
+            console.error(e.stack);
+            alert("Error parsing task data: " + e);
+            throw e;
+        }
+
+        // Run the CFS algorithm and generate a results report
+        var timeline = getTimeline($("#treeType").value);
+        var results = scheduler.runScheduler(tasksData, timeline);
+
+        var sR = $("#schedulerResults"),
+            tT = $("#treeType"),
+            tName = tT.options[tT.selectedIndex].text;
+        sR.innerHTML += "Running scheduler using " + tName + "\n";
+        sR.innerHTML += scheduler.generate_report(tasksData, results);
+        sR.innerHTML += "\n";
     });
 
 }
-
-
-
-
-

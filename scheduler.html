@@ -1,40 +1,48 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+<html>
 <head>
-    <title>Completely Fair Scheduler with RBT</title>
+    <title>Completely Fair Scheduler</title>
 
     <style>
-        h3{
+        h3 {
             text-align: center;
-        }
-        div
-        {
-            outline-style: dashed;
-            height: 80%;
-            width: 50%;
-            outline-color: blueviolet;
-
         }
     </style>
 
 </head>
 <body>
-<div></br>
-    <h3>Task Scheduler Implementation</h3></br>
+    <h3>Completely Fair Scheduler</h3>
 
-    &emsp;&emsp;<label>Choose the Tasks file for Scheduling</label></br>
-    &emsp;&emsp;<input id="fileInput" type="file" size="5" /></br></br>
+    <label>Tasks File: </label>
+    <input id="fileInput" type="file" size="5"/><br/>
+    <textarea id="rawTasksFile" cols="80" rows="10">3 11
+A 1 3
+B 2 4
+C 2 3</textarea>
 
-    &emsp;&emsp;<label>Select Datatype to run the scheduler</label></br>
-    &emsp;&emsp;<select id="dataStructure">
-        <option value="1" name="red-black-tree">Red Black Tree</option>
-        <option value="2" name="heap">Heap</option>
-    </select></br>
-    &emsp;&emsp;<input id="runButton" type="submit" size="5" value="Run Scheduler"/></br></br>
+    <br/></br/>
 
-    &emsp;&emsp;<pre id="schedulerOutput" cols="50" rows="20"></pre>
-</div>
+    <div class="control_row">
+        <label>Timeline Datastructure: </label>
+        <select id="treeType">
+            <option value="bst">Binary Search Tree (BST)
+            <option value="rbt" selected>Red-Black Tree (RBT)
+            <option value="minht">Min Heap (Tree)
+            <option value="minha">Min Heap (Array)
+        </select>
+    </div>
 
-<script src="browser.js"></script>
+    <input id="runButton" type="submit" size="5" value="Run Scheduler"/></br></br>
+
+    <textarea id="schedulerResults" cols="80" rows="20"></textarea>
+
+    <script src="binarytree.js"></script>
+    <script src="bst.js"></script>
+    <script src="rbt.js"></script>
+    <script src="heaptree.js"></script>
+    <script src="heaparray.js"></script>
+    <script src="tasks.js"></script>
+    <script src="scheduler.js"></script>
+    <script src="browser.js"></script>
 </body>
 </html>

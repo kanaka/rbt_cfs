@@ -111,17 +111,21 @@ function runScheduler(tasks, timeline, callback) {
 }
 
 function generate_report(tasks, results, detailed) {
-    var reads = 0, writes = 0, total = 0, completed = 0;
+    var reads = 0, writes = 0, total = 0, completed = 0, out = "";
 
     // General info on the original tasks
     if (detailed) {
-        console.log("Task Queue:");
-        console.log(tasks.task_queue);
+        out += "Task Queue:\n";
+        for (var i=0; i < tasks.task_queue.length; i++) {
+            var t = tasks.task_queue[i];
+            out += t.id + " " + t.start_time + " " + t.duration + "\n";
+            //console.log(tasks.task_queue);
+        }
     }
 
     // A chronological summary of the state at each time
     if (detailed) {
-        console.log("\ntime [tasks]: running_task, completed?");
+        out += "\ntime [tasks]: running_task, completed?\n";
     }
     for (var i=0; i < results.time_data.length; i++) {
         var t = results.time_data[i],
@@ -134,7 +138,7 @@ function generate_report(tasks, results, detailed) {
             completed++;
         }
         if (detailed) {
-            console.log(msg);
+            out += msg + "\n";
         }
     }
 
@@ -148,17 +152,19 @@ function generate_report(tasks, results, detailed) {
     total = reads+writes;
 
     // Report summary statistics
-    console.log("Total Tasks:", tasks.num_of_tasks);
-    console.log("Completed Tasks:", completed);
-    console.log("Total Time:", tasks.total_time);
+    out += "Total Tasks: " + tasks.num_of_tasks + "\n";
+    out += "Completed Tasks: " + completed + "\n";
+    out += "Total Time: " + tasks.total_time + "\n";
 
-    console.log("Wallclock elapsed time: " + results.elapsed_ms + "ms");
-    console.log("Node operations reads  : " + reads);
-    console.log("                writes : " + writes);
-    console.log("                total  : " + total);
-    console.log("Throughput:", (completed/results.elapsed_ms), "completed tasks/ms");
-    console.log("           ", (completed/total), "completed tasks/operation");
+    out += "Wallclock elapsed time: " + results.elapsed_ms + "ms\n";
+    out += "Node operations reads  : " + reads + "\n";
+    out += "                writes : " + writes + "\n";
+    out += "                total  : " + total + "\n";
+    out += "Throughput: " + (completed/results.elapsed_ms) + " completed tasks/ms\n";
+    out += "            " + (completed/total) + " completed tasks/operation\n";
     //console.log("Tasks per tick:", tasks_per_tick);
+
+    return out;
 }
 
 if (typeof require !== 'undefined' && require.main === module) {
@@ -189,7 +195,7 @@ if (typeof require !== 'undefined' && require.main === module) {
     var results = runScheduler(tasks, timeline);
 
     // Print a report from the results
-    generate_report(tasks, results, detailed);
+    console.log(generate_report(tasks, results, detailed));
 } else {
     // we are being required as a module so export the runScheduler
     // function
