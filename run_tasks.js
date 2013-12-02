@@ -18,7 +18,7 @@ function run_tasks (pow1, pow2, timeline) {
         // Run the CFS algorithm and generate a results report
         var results = sched.runScheduler(taskdata, timeline);
 
-        console.log(sched.generate_report(taskdata, results));
+        console.log(sched.generateReport(taskdata, results));
         console.log("\n");
     }
 }

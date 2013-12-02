@@ -110,7 +110,7 @@ function runScheduler(tasks, timeline, callback) {
     return results;
 }
 
-function generate_report(tasks, results, detailed) {
+function generateReport(tasks, results, detailed) {
     var reads = 0, writes = 0, total = 0, completed = 0, out = "";
 
     // General info on the original tasks
@@ -195,11 +195,11 @@ if (typeof require !== 'undefined' && require.main === module) {
     var results = runScheduler(tasks, timeline);
 
     // Print a report from the results
-    console.log(generate_report(tasks, results, detailed));
+    console.log(generateReport(tasks, results, detailed));
 } else {
     // we are being required as a module so export the runScheduler
     // function
     exports.runScheduler = runScheduler;
-    exports.generate_report = generate_report;
+    exports.generateReport = generateReport;
 }
 

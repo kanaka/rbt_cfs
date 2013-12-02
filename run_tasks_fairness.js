@@ -99,5 +99,5 @@ sched.runScheduler(tasks, timeline, function(curTime, results) {
     console.log(res.join(","));
 });
 
-//sched.generate_report(tasks, results, true);
+//sched.generateReport(tasks, results, true);
 

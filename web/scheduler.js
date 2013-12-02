@@ -52,7 +52,7 @@ window.onload = function () {
             tT = $("#treeType"),
             tName = tT.options[tT.selectedIndex].text;
         sR.innerHTML += "Running scheduler using " + tName + "\n";
-        sR.innerHTML += scheduler.generate_report(tasksData, results);
+        sR.innerHTML += scheduler.generateReport(tasksData, results);
         sR.innerHTML += "\n";
     });
 
