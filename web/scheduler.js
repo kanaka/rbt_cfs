@@ -50,9 +50,10 @@ window.onload = function () {
 
         var sR = $("#schedulerResults"),
             tT = $("#treeType"),
-            tName = tT.options[tT.selectedIndex].text;
+            tName = tT.options[tT.selectedIndex].text,
+            detailed = $("#detailed").checked;
         sR.innerHTML += "Running scheduler using " + tName + "\n";
-        sR.innerHTML += scheduler.generateReport(tasksData, results);
+        sR.innerHTML += scheduler.generateReport(tasksData, results, detailed);
         sR.innerHTML += "\n";
     });
 
