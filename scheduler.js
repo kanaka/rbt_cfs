@@ -104,6 +104,11 @@ function runScheduler(tasks, timeline, callback) {
         }
     }
 
+    // Put any currently running task back in the timeline
+    if (running_task) {
+        timeline.insert(running_task);
+    }
+
     //binarytree.RESET_STATS();
     results.node_stats = binarytree.GET_STATS();
     results.elapsed_ms = (new Date().getTime())-start_ms;
