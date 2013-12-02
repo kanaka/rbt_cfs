@@ -130,6 +130,8 @@ function BST (cmpFn) {
         // call parent/super constructor
         api = binarytree.BinaryTree.call(self, cmpFn);
 
+    api.name   = "Binary Search Tree";
+
     self.insertFn = bstInsert;
     self.removeFn = bstRemove;
 

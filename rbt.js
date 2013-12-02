@@ -279,6 +279,8 @@ function RBT(cmpFn) {
     // call parent/super constructor
     api = bst.BST.call(self, cmpFn);
 
+    api.name = "Red-Black Tree";
+
     self.insertFn = redblackInsert;
     self.removeFn = redblackRemove;
 

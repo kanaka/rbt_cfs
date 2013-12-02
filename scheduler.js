@@ -1,9 +1,10 @@
-//#!/usr/bin/env node
-
 // Node vs browser behavior
 if (typeof module !== 'undefined') {
     var binarytree = require('./binarytree'),
-        rbt = require('./rbt.js');
+        bst = require('./bst.js'),
+        rbt = require('./rbt.js'),
+        heaptree = require('./heaptree.js'),
+        heaparray = require('./heaparray.js');
 } else {
     var scheduler = {},
         exports = scheduler;
@@ -167,13 +168,34 @@ function generateReport(tasks, results, detailed) {
     return out;
 }
 
+function getTimelineByName(name) {
+    function vsort(a,b) {
+            return a.val.vruntime - b.val.vruntime;
+    }
+
+    // Pick the timeline tree structure based on the string name
+    var timeline;
+    switch (name.toLowerCase()) {
+    case 'bst':       timeline = new bst.BST(vsort); break;
+    case 'rbt':       timeline = new rbt.RBT(vsort); break;
+    case 'heaptree':  timeline = new heaptree.HeapTree('min', vsort); break;
+    case 'heaparray': timeline = new heaparray.HeapArray('min', vsort); break;
+    default:          throw new Error("Unknown timeline name '" + name + "'");
+    }
+    return timeline;
+}
+
+function usage() {
+    console.log("node scheduler.js [--detailed] bst|rbt|heaptree|heaparray TASK_FILE");
+    process.exit(2);
+}    
+
 if (typeof require !== 'undefined' && require.main === module) {
     // we are being run directly so load the task file specified on
     // the command line pass the data to runScheduler using an
     // RedBlackTree for the timeline
-    if (process.argv.length < 3) {
-        console.log("node scheduler.js [--detailed] TASK_FILE");
-        process.exit(2);
+    if (process.argv.length < 4) {
+        usage();
     }
 
     var fs = require('fs');
@@ -184,22 +206,22 @@ if (typeof require !== 'undefined' && require.main === module) {
         detailed = true;
         process.argv.splice(2,1);
     }
-    var fileName = process.argv[2];
+    var timeline = getTimelineByName(process.argv[2]);
+    var fileName = process.argv[3];
     var data = fs.readFileSync(fileName, 'utf8');
     var tasks = tasksModule.parseTasks(data);
-
-    var timeline = new rbt.RBT(function (a, b) {
-            return a.val.vruntime - b.val.vruntime; });
 
     // Run the CFS algorithm and generate a results report
     var results = runScheduler(tasks, timeline);
 
     // Print a report from the results
+    console.log("Running with:", timeline.name);
     console.log(generateReport(tasks, results, detailed));
 } else {
     // we are being required as a module so export the runScheduler
     // function
     exports.runScheduler = runScheduler;
     exports.generateReport = generateReport;
+    exports.getTimelineByName = getTimelineByName;
 }
 

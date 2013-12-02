@@ -10,7 +10,7 @@ var fs = require('fs');
 var tasksModule = require('./tasks');
 
 function usage() {
-    console.log("node fairness.js [bst|rbt|heaptree|heaparray] TASK_FILE");
+    console.log("node fairness.js bst|rbt|heaptree|heaparray TASK_FILE");
     process.exit(2);
 }
 
@@ -23,33 +23,7 @@ var fileName = process.argv[3];
 var data = fs.readFileSync(fileName, 'utf8');
 var tasks = tasksModule.parseTasks(data);
 
-function vsort(a,b) {
-    return a.val.vruntime - b.val.vruntime;
-}
-
-// Pick the timeline tree structure based on the string given on the
-// command line
-var mode, Timeline;
-switch (process.argv[2].toLowerCase()) {
-    case 'bst':
-        mode="BST";
-        timeline = new bst.BST(vsort);
-        break;
-    case 'rbt':
-        mode="RBT";
-        timeline = new rbt.RBT(vsort);
-        break;
-    case 'heaptree':
-        mode="HeapTree";
-        timeline = new heaptree.HeapTree('min', vsort);
-        break;
-    case 'heaparray':
-        mode="HeapArray";
-        timeline = new heaparray.HeapArray('min', vsort);
-        break;
-    default:
-        usage();
-}
+var timeline = sched.getTimelineByName(process.argv[2]);
 
 // Run the CFS algorithm and generate a results report
 var header = "time,num_tasks,running_task_id,completed"

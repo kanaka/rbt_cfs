@@ -8,18 +8,6 @@ window.onload = function () {
     //Check File API support
     var timeline;
 
-    function getTimeline(treetype) {
-        function tsort(a, b) {
-            return a.val.vruntime - b.val.vruntime;
-        }
-
-        var trees = {bst: new bst.BST(tsort),
-                     rbt: new rbt.RBT(tsort),
-                     minht: new heaptree.HeapTree('min', tsort),
-                     minha: new heaparray.HeapArray('min', tsort)};
-        return trees[treetype];
-    }
-
     $("#fileInput").addEventListener('change', function (e) {
         var file = e.target.files[0]; //File object
             fReader = new FileReader();
@@ -45,14 +33,13 @@ window.onload = function () {
         }
 
         // Run the CFS algorithm and generate a results report
-        var timeline = getTimeline($("#treeType").value);
+        var timeline = getTimelineByName($("#treeType").value);
         var results = scheduler.runScheduler(tasksData, timeline);
 
         var sR = $("#schedulerResults"),
             tT = $("#treeType"),
-            tName = tT.options[tT.selectedIndex].text,
             detailed = $("#detailed").checked;
-        sR.innerHTML += "Running scheduler using " + tName + "\n";
+        sR.innerHTML += "Running scheduler with: " + timeline.name + "\n";
         sR.innerHTML += scheduler.generateReport(tasksData, results, detailed);
         sR.innerHTML += "\n";
     });

@@ -54,6 +54,8 @@ function HeapArray (type, cmpFn) {
         api = heaptree.HeapTree.call(self, type, cmpFn),
         arr = [];
 
+    api.name = "Heap Array (" + type + ")";
+
     self.Node = function(val, opts) {
         var node = this;
         opts = opts || {};

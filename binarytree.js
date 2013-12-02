@@ -390,8 +390,9 @@ function BinaryTree (cmpFn) {
     }
 
     var self = this,
-        api = {},
+        api = {name: "Generic Binary Tree"},
         hashId = 1;
+
     self.cmpFn = cmpFn;
     self.Node = Node;
     self.root = NIL;

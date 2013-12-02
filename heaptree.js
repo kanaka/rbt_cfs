@@ -158,6 +158,8 @@ function HeapTree (type, cmpFn) {
     // call parent/super constructor
     api = binarytree.BinaryTree.call(self, cmpFn);
 
+    api.name = "Heap Tree (" + type + ")";
+
     if (type === 'min') {
         api.min = function() { return self.root; };
     } else if (type === 'max') {
