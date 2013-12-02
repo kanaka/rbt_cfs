@@ -166,12 +166,18 @@ if (typeof require !== 'undefined' && require.main === module) {
     // the command line pass the data to runScheduler using an
     // RedBlackTree for the timeline
     if (process.argv.length < 3) {
-        console.log("cfs TASK_FILE");
+        console.log("node scheduler.js [--detailed] TASK_FILE");
         process.exit(2);
     }
 
     var fs = require('fs');
     var tasksModule = require('./tasks');
+    var detailed = false;
+
+    if (process.argv[2] === '--detailed') {
+        detailed = true;
+        process.argv.splice(2,1);
+    }
     var fileName = process.argv[2];
     var data = fs.readFileSync(fileName, 'utf8');
     var tasks = tasksModule.parseTasks(data);
@@ -181,9 +187,9 @@ if (typeof require !== 'undefined' && require.main === module) {
 
     // Run the CFS algorithm and generate a results report
     var results = runScheduler(tasks, timeline);
-    //generate_report(tasks, results, true);
-    generate_report(tasks, results);
 
+    // Print a report from the results
+    generate_report(tasks, results, detailed);
 } else {
     // we are being required as a module so export the runScheduler
     // function
