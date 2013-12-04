@@ -33,7 +33,7 @@ function runScheduler(tasks, timeline, callback) {
     // Loop from time/tick 0 through the total time/ticks specified
     for(var curTime=0; curTime < tasks.total_time; curTime++) {
         if (curTime % 1000 === 0) {
-            console.error("curTime: " + curTime + ", size: " + timeline.size());
+            console.error("curTime: " + curTime + ", size: " + timeline.size() + ", task index: " + time_queue_idx);
         }
     
         // Results data for this time unit/tick
