@@ -29,7 +29,7 @@ var timeline = sched.getTimelineByName(process.argv[2]);
 var header = "time,num_tasks,running_task_id,completed"
 for (var j=0; j < tasks.task_queue.length; j++) {
     var task = tasks.task_queue[j];
-    header += "," + task.id + "_t";
+   // header += "," + task.id + "_t";
     header += "," + task.id + "_f";
     task.num_tasks_history = [];
 }
@@ -59,14 +59,14 @@ sched.runScheduler(tasks, timeline, function(curTime, results) {
             if (task.truntime >= task.duration) {
                 task.hide = true;
             }
-            res.push(" " + task.truntime);
+            //res.push(" " + task.truntime);
             //console.log(task.num_tasks_history);
             //console.log("Task " + task.id + " ratio of " + tasks_avg + " avg tasks: " +
             //(1.0/tasks_avg) + ", ratio of " + elapsed + " time: " + task.truntime/elapsed);
             var fairness = (task.truntime/elapsed)/(1.0/tasks_avg);
             res.push(fairness.toFixed(2));
         } else {
-            res.push(" ");
+           // res.push(" ");
             res.push("");
         }
     }
