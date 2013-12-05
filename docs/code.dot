@@ -1,0 +1,60 @@
+digraph Classes {
+    label = "Task Scheduler/RBT Code Structure ";
+    labelloc = "t";
+
+    subgraph cluster_binarytree {
+        label = "binarytree.js";
+        NNode [label="Node"];
+        BinaryTree [label="BinaryTree"];
+    }
+
+    subgraph cluster_bst {
+        label = "bst.js";
+        BST [label="BST"];
+    }
+
+    subgraph cluster_rbt {
+        label = "rbt.js";
+        RBT [label="RBT"];
+    }
+    subgraph cluster_heaptree {
+        label = "heaptree.js";
+        HeapTree [label="HeapTree"];
+    }
+    subgraph cluster_heaparray {
+        label = "heaparray.js";
+        HeapArray [label="HeapArray"];
+    }
+
+    subgraph cluster_scheduler {
+        label = "scheduler.js";
+        runScheduler [shape=box fontcolor=red label="runScheduler"];
+    }
+
+    subgraph cluster_1 {
+        label = "scheduler.html";
+        fileInput [shape=box color=blue label="#fileInput"];
+        runButton [shape=box color=blue label="#runButton"];
+    }
+
+    subgraph cluster_2 {
+        label = "tasks.js";
+        parseTasks [shape=box fontcolor=red label="parseTasks"];
+    }
+
+    BinaryTree -> NNode;
+    BST -> BinaryTree;
+    RBT -> BST;
+    HeapTree -> BinaryTree;
+    HeapArray -> HeapTree;
+
+    runScheduler -> BST [style=dotted];
+    runScheduler -> RBT [style=dotted];
+    runScheduler -> HeapTree [style=dotted];
+    runScheduler -> HeapArray [style=dotted];
+    runScheduler -> BinaryTree [style=dotted];
+    runScheduler -> parseTasks [color=red style=dotted];
+
+    runButton -> runScheduler [color=red style=dotted];
+    fileInput -> parseTasks [color=red style=dotted];
+}

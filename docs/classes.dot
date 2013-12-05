@@ -1,0 +1,34 @@
+digraph Classes {
+    label = "Task Scheduler/RBT Class Hierarchy";
+    labelloc = "t";
+
+    subgraph cluster_binarytree {
+        label = "binarytree.js";
+        NNode [label="Node"];
+        BinaryTree [label="BinaryTree"];
+    }
+
+    subgraph cluster_bst {
+        label = "bst.js";
+        BST [label="BST"];
+    }
+
+    subgraph cluster_rbt {
+        label = "rbt.js";
+        RBT [label="RBT"];
+    }
+    subgraph cluster_heaptree {
+        label = "heaptree.js";
+        HeapTree [label="HeapTree"];
+    }
+    subgraph cluster_heaparray {
+        label = "heaparray.js";
+        HeapArray [label="HeapArray"];
+    }
+
+    BinaryTree -> NNode;
+    BST -> BinaryTree;
+    RBT -> BST;
+    HeapTree -> BinaryTree;
+    HeapArray -> HeapTree;
+}
