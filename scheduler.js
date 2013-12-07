@@ -32,8 +32,9 @@ function runScheduler(tasks, timeline, callback) {
 
     // Loop from time/tick 0 through the total time/ticks specified
     for(var curTime=0; curTime < tasks.total_time; curTime++) {
+        // Periodic debug output
         if (curTime % 1000 === 0) {
-            console.error("curTime: " + curTime + ", size: " + timeline.size() + ", task index: " + time_queue_idx);
+            //console.error("curTime: " + curTime + ", size: " + timeline.size() + ", task index: " + time_queue_idx);
         }
     
         // Results data for this time unit/tick
@@ -140,11 +141,22 @@ function generateSummary(tasks, timeline, results) {
     
 }
 
-function generateReport(tasks, results, detailed) {
+function generateReport(tasks, timeline, results, mode) {
     var reads = 0, writes = 0, total = 0, completed = 0, out = "";
 
+    switch (mode) {
+    case 'summary': case 'csv': case 'report': case 'detailed': break;
+    default:
+        throw new Error("Unknown reporting mode '" + mode + "'");
+    }
+
+
+    if (mode === "summary" ) {
+        return generateSummary(tasks, timeline, results);
+    }
+
     // General info on the original tasks
-    if (detailed) {
+    if (mode === 'detailed') {
         out += "Task Queue:\n";
         for (var i=0; i < tasks.task_queue.length; i++) {
             var t = tasks.task_queue[i];
@@ -154,7 +166,7 @@ function generateReport(tasks, results, detailed) {
     }
 
     // A chronological summary of the state at each time
-    if (detailed) {
+    if (mode === 'detailed') {
         out += "\ntime [tasks]: running_task, completed?\n";
     }
     for (var i=0; i < results.time_data.length; i++) {
@@ -167,7 +179,7 @@ function generateReport(tasks, results, detailed) {
             msg += ", Completed";
             completed++;
         }
-        if (detailed) {
+        if (mode === 'detailed') {
             out += msg + "\n";
         }
     }
@@ -181,18 +193,33 @@ function generateReport(tasks, results, detailed) {
     }
     total = reads+writes;
 
-    // Report summary statistics
-    out += "Total Tasks: " + tasks.num_of_tasks + "\n";
-    out += "Completed Tasks: " + completed + "\n";
-    out += "Total Time: " + tasks.total_time + "\n";
+    if (mode === 'csv') {
+        // Report summary statistics
+        // header is printed by caller
+        out += tasks.num_of_tasks + ",";
+        out += tasks.total_time + ",";
+        out += completed + ",";
 
-    out += "Wallclock elapsed time: " + results.elapsed_ms + "ms\n";
-    out += "Node operations reads  : " + reads + "\n";
-    out += "                writes : " + writes + "\n";
-    out += "                total  : " + total + "\n";
-    out += "Throughput: " + (completed/results.elapsed_ms) + " completed tasks/ms\n";
-    out += "            " + (completed/total) + " completed tasks/operation\n";
-    //console.log("Tasks per tick:", tasks_per_tick);
+        out += results.elapsed_ms + ",";
+        out += reads + ",";
+        out += writes + ",";
+        out += total + ",";
+        out += (completed/results.elapsed_ms) + ",";
+        out += (completed/total);
+    } else {
+        // Report summary statistics
+        out += "Total Tasks: " + tasks.num_of_tasks + "\n";
+        out += "Total Time: " + tasks.total_time + "\n";
+        out += "Completed Tasks: " + completed + "\n";
+
+        out += "Wallclock elapsed time: " + results.elapsed_ms + "ms\n";
+        out += "Node operations reads  : " + reads + "\n";
+        out += "                writes : " + writes + "\n";
+        out += "                total  : " + total + "\n";
+        out += "Throughput: " + (completed/results.elapsed_ms) + " completed tasks/ms\n";
+        out += "            " + (completed/total) + " completed tasks/operation\n";
+        //console.log("Tasks per tick:", tasks_per_tick);
+    }
 
     return out;
 }
@@ -215,7 +242,7 @@ function getTimelineByName(name) {
 }
 
 function usage() {
-    console.log("node scheduler.js [--report|--detailed] bst|rbt|heaptree|heaparray TASK_FILE");
+    console.log("node scheduler.js [--summary|--csv|--report|--detailed] bst|rbt|heaptree|heaparray TASK_FILE");
     process.exit(2);
 }    
 
@@ -229,15 +256,13 @@ if (typeof require !== 'undefined' && require.main === module) {
 
     var fs = require('fs');
     var tasksModule = require('./tasks');
-    var report = false, detailed = false;
+    var mode = "summary";
 
-    switch (process.argv[2]) {
-        case '--detailed':
-            detailed = true; // fall through
-        case '--report':
-            report = true;
-            process.argv.splice(2,1);
+    if (process.argv[2].slice(0,2) === "--") {
+        mode = process.argv[2].slice(2);
+        process.argv.splice(2,1);
     }
+
     var timeline = getTimelineByName(process.argv[2]);
     var fileName = process.argv[3];
     var data = fs.readFileSync(fileName, 'utf8');
@@ -246,19 +271,17 @@ if (typeof require !== 'undefined' && require.main === module) {
     // Run the scheduler algorithm
     var results = runScheduler(tasks, timeline);
 
-    // Print the summary information
-    console.log(generateSummary(tasks, timeline, results));
-
     // Print a report from the results
-    if (report || detailed) {
+    if (mode === 'csv') {
+        console.log("total_tasks,total_time,completed_tasks,elapsed_ms,read_ops,write_ops,total_ops,tasks/ms,tasks/op");
+    } else if (mode !== 'summary') {
         console.log("Running with:", timeline.name);
-        console.log(generateReport(tasks, results, detailed));
     }
+    console.log(generateReport(tasks, timeline, results, mode));
 } else {
     // we are being required as a module so export the runScheduler
     // function
     exports.runScheduler = runScheduler;
-    exports.generateSummary = generateSummary;
     exports.generateReport = generateReport;
     exports.getTimelineByName = getTimelineByName;
 }

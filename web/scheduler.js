@@ -40,14 +40,15 @@ window.onload = function () {
 
         var sR = $("#schedulerResults"),
             tT = $("#treeType"),
-            report = $("#report").checked,
-            detailed = $("#detailed").checked;
+            mode = $('input[name="stats"]:checked').id;
         console.log(results);
-        sR.innerHTML += scheduler.generateSummary(tasksData, timeline, results);
-        if (report || detailed) {
+        if (mode === 'csv') {
+            sR.innerHTML += "total_tasks,total_time,completed_tasks,elapsed_ms,read_ops,write_ops,total_ops,tasks/ms,tasks/op\n";
+        } else if (mode !== 'summary') {
             sR.innerHTML += "Running scheduler with: " + timeline.name + "\n";
-            sR.innerHTML += scheduler.generateReport(tasksData, results, detailed);
         }
+
+        sR.innerHTML += scheduler.generateReport(tasksData, timeline, results, mode);
         sR.innerHTML += "\n";
     });
 
