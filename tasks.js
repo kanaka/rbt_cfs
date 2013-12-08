@@ -79,7 +79,7 @@ if (typeof require !== 'undefined' && require.main === module) {
     }
     // we are being run directly so load the file specified and print
     // the data from the file
-    if (process.argv.length < 3) { usage(); }
+    if (process.argv.length < 4) { usage(); }
 
     var fs = require('fs');
     var mode = process.argv[2].toLowerCase();
@@ -92,6 +92,7 @@ if (typeof require !== 'undefined' && require.main === module) {
         console.log(tasks);
         break;
     case 'write':
+        if (process.argv.length < 7) { usage(); }
         var no_tasks = parseInt(process.argv[4],10),
             start = parseInt(process.argv[5],10),
             duration = parseInt(process.argv[6],10),
