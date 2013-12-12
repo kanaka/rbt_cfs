@@ -69,6 +69,26 @@ this models the Linux Completely Fair Scheduler (CFS).
     node node_modules/nodeunit/bin/nodeunit test_*
     ```
 
+* In addition to the command line programs, there are two web
+  applications that can be loaded in a browser (tested in Google
+  Chrome). These webapps and node.js interfaces both share the same
+  JavaScript code for the underlying algorithms.
+
+    * **trees.html**: This webapp uses the [d3.js]() library to
+      visually render the state of each of tree data-structures. The
+      interface has a dropdown selection for four differnent tree
+      structures: Binary Search Tree, Red-Black Tree, Min/Max
+      HeapTree, and Min/Max HeapArray. After selecting a tree, nodes
+      can be added to the tree one at a time, or as a group of
+      randomly chosen nodes from a range. 
+
+    * **scheduler.html**: This webapp presents an interface to the
+      parseTasks (in `tasks.j`) and runScheduler (in `scheduler.js`)
+      algorithms. The page loads with a very small default task file
+      presented. The "Choose File" button can be used to load a new
+      tasks file (which can be edited after it is loaded). The "Run
+      Scheduler" button will run the scheduler algorith using the
+      selected data structure and reporting output format.
 
 ## Design
 
@@ -103,7 +123,7 @@ decreases throughput.
 
 ### Scheduler
 
-The scheduler (runScheduler in scheduler.js) algorithm performs the
+The scheduler (runScheduler in `scheduler.js`) algorithm performs the
 following tasks in a loop (where curTime is the current tick/time
 unit):
 
@@ -133,7 +153,7 @@ provide the following interface:
 ### Node (binarytree.js)
 
 Each of the timeline tree data structures is implemented using the
-Node class (Node in binarytree.js) to represents nodes in the tree.
+Node class (Node in `binarytree.js`) to represents nodes in the tree.
 All operations on the tree are performed in terms of the Node class.
 Some of the Node operations/attributes (swap, p, left, right) behave
 differently depending on whether the data structure is constructed
@@ -142,25 +162,27 @@ using references (BST, RBT, HeapTree) or using a flat array structure
 
 The Node class provides the following attributes:
 
-- id    : A unique node ID. Used for distinguishing node which have an
-          identical value.
-- isNIL : Set to true if this is a special NIL sentinel node, false
-          otherwise.
-- val   : The actual value of the node. In the case of the scheduler
-          timeline, this holds the task object/map.
-- color : The color of this node. Only applicable to Red-Black Tree.
-- idx   : The array index of this node if it is being used in
-          a data structure that is array backed.
-- p     : A reference to the parent of this Node.
-- left  : A reference to the left child of this Node.
-- right : A reference to the right child of this Node.
+- **id**    : A unique node ID. Used for distinguishing node which
+              have an identical value.
+- **isNIL** : Set to true if this is a special NIL sentinel node,
+              false otherwise.
+- **val**   : The actual value of the node. In the case of the
+              scheduler timeline, this holds the task object/map.
+- **color** : The color of this node. Only applicable to Red-Black
+              Tree.
+- **idx**   : The array index of this node if it is being used in
+              a data structure that is array backed.
+- **p**     : A reference to the parent of this Node.
+- **left**  : A reference to the left child of this Node.
+- **right** : A reference to the right child of this Node.
 
 In addition the Node class provides two methods:
 
-- cmp   : Called with another Node; returns -1 if this Node is less
-          than the other Node, 0 if it is equal, and 1 if it is
-          greater than the other Node.
-- swap  : Called with another Node; swap position with the other Node.
+- **cmp**   : Called with another Node; returns -1 if this Node is
+              less than the other Node, 0 if it is equal, and 1 if it
+              is greater than the other Node.
+- **swap**  : Called with another Node; swap position with the other
+              Node.
 
 From the perspective of the Node class, the val attribute is an opaque
 object. In order to compare this Node to another Node, when a Node is
@@ -177,18 +199,18 @@ operations that are performanced against the tree.
 BinaryTree is a generic class that implements methods that are common
 to all of the binary trees data structures:
 
-- size   : Returns the number of non-NIL nodes in the tree.
-- reduce : Returns a reduced value that results from running an
-           provided action function against each node of the tree and
-           accumulating the resulting value.
-- tuple  : Returns a simple hierarchical list representation of the
-           tree that simplifies validation/testing.
-- walk   : Returns a sequence of Nodes that result from walking the
-           tree in, pre, or post order.
-- links  : Returns a sequence of pairs that represent all the parent
-           to child links in the tree.
-- DOT    : Returns string in DOT (graphviz) format that can be used
-           generate an image of the tree.
+- **size**   : Returns the number of non-NIL nodes in the tree.
+- **reduce** : Returns a reduced value that results from running an
+               provided action function against each node of the tree
+               and accumulating the resulting value.
+- **tuple**  : Returns a simple hierarchical list representation of
+               the tree that simplifies validation/testing.
+- **walk**   : Returns a sequence of Nodes that result from walking
+               the tree in, pre, or post order.
+- **links**  : Returns a sequence of pairs that represent all the
+               parent to child links in the tree.
+- **DOT**    : Returns string in DOT (graphviz) format that can be
+               used generate an image of the tree.
 
 When a BinaryTree derived (concrete) class is instantiated, it take
 a comparison function which is used to instantiate new Nodes.
@@ -260,48 +282,16 @@ TASK2_ID TASK2_START_TIME TASK2_DURATION
 TASKn_ID TASKn_START_TIME TASKn_DURATION
 ```
 
-The parseTasks function (in tasks.js) can be used to parse the data
+The parseTasks function (in `tasks.js`) can be used to parse the data
 from a task description file into a tasks descriptor object/map that
 can be passed to the scheduler function.
 
-The generateTasks function (in tasks.js) can be used to generate task
-descriptor object/map. The function parameters allow for fixed or
+The generateTasks function (in `tasks.js`) can be used to generate
+task descriptor object/map. The function parameters allow for fixed or
 random ranges for the start and durations of the tasks being
 generated.
 
-The tasksToString function (in tasks.js) takes a task descriptor
+The tasksToString function (in `tasks.js`) takes a task descriptor
 object/map and generates a string in the task description file format
 which can then be written to disk as a task desctiption file.
 
-### Driver programs / UI
-
-TODO: describe Node install process
-
-There are several programs that can be run directly from the command
-line using Node.js. `node PROGRAM.js` will print out command line
-usage string.
-
-- `tasks.js`: file can be run directly to read and parse a tasks file
-  or to write a new tasks file.
-
-- `scheduler.js`: 
-
-- `run_tasks.js`:
-
-- `run_tasks_fairness.js`:
-
-In addition there are two web interfaces:
-
-- trees.html:
-- scheduler.html:
-
-
-
-
-- Hierarchy:
-
-    binarytree.js :: BinaryTree
-        L bst.js :: BST
-            L rbt.js :: RBT
-        L heaptree.js :: HeapTree
-            L heaparray.js :: HeapArray
