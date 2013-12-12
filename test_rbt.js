@@ -1,6 +1,6 @@
 // To run tests:
 //     npm install nodeunit
-//     node_modules/nodeunit/bin/nodeunit test_bst.js
+//     node_modules/nodeunit/bin/nodeunit test_rbt.js
 
 "use strict";
 
