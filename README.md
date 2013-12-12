@@ -1,9 +1,5 @@
 # CSE5311 Project
 
-## Example of using the CFS algorithm
-
-node ./scheduler.js rbt data/simple3.txt
-
 ## Overview
 
 This project is a Javascript implementation of a CPU scheduler and
@@ -11,6 +7,69 @@ four data structures for use as the future task timeline: Binary
 Search Tree (unbalanced), Red-Black Tree, Heap Tree, and Heap Array.
 When the scheduler is using the RBT data structure for the timeline,
 this models the Linux Completely Fair Scheduler (CFS).
+
+## Running the code
+
+* Prerequisites:
+  * You need to install [Node.js](http://nodejs.org)
+  * Unpacked project directory
+  * To run the unit tests you also need to install the nodeunit
+    module. Use npm from the project directory:
+
+```
+npm install nodeunit
+```
+
+* Load a simple file with 3 tasks, run the scheduler using a simple
+  (unbalanced) Binary Search Tree for the timeline, and generate
+  a brief report (elapsed time, throughput, tree operations).
+
+```
+node ./scheduler.js --report bst data/simple3.txt
+```
+
+* Load a more complicated tasks file, run the scheduler using
+  a Red-Black Tree for the timeline, and generate a summary of the
+  state of the timline and a list of the tasks that ran at each time
+  unit:
+
+```
+node scheduler.js --summary rbt data/mixed12.txt
+```
+
+* Load a larger task file (20 tasks), run the scheduler using
+  a Red-Black Tree for the timeline, and generate a detailed report
+  (starting tasks, running/completed task at each tick, in addition to
+  information from --report):
+
+```
+node ./scheduler.js --detailed rbt data/IncrementalSTdiffRT.txt
+```
+
+* Generate 9 different sets of tasks (with 2^2 through 2^10 tasks),
+  run the scheduler against each task set using a HeapTree for the
+  timeline, and generate CSV formatted output (one line per task set):
+
+```
+node ./run_tasks.js --csv heaptree 2 10
+```
+
+* Load a tasks file with 8 tasks, run the scheduler using a HeapArray
+  for the timeline, and generate CSV output with one line for each
+  simulation time unit that contains fairness ratios for every task.
+
+```
+node ./run_tasks_fairness.js heaparray data/flat8.txt
+```
+
+* Run all the unit tests using nodeunit:
+
+```
+node node_modules/nodeunit/bin/nodeunit test_*
+```
+
+
+## Design
 
 There are several competing goals that must be balanced in scheduler
 design. The two that are considered by this project are fairness and
@@ -192,11 +251,13 @@ Tasks for the scheduler to run can be generated dynamically or loaded
 from a task description file. A task description file has the
 following format:
 
-    NUM_OF_TASKS TOTAL_TIME
-    TASK1_ID TASK1_START_TIME TASK1_DURATION
-    TASK2_ID TASK2_START_TIME TASK2_DURATION
-    ...
-    TASKn_ID TASKn_START_TIME TASKn_DURATION
+```
+NUM_OF_TASKS TOTAL_TIME
+TASK1_ID TASK1_START_TIME TASK1_DURATION
+TASK2_ID TASK2_START_TIME TASK2_DURATION
+...
+TASKn_ID TASKn_START_TIME TASKn_DURATION
+```
 
 The parseTasks function (in tasks.js) can be used to parse the data
 from a task description file into a tasks descriptor object/map that
@@ -233,3 +294,13 @@ In addition there are two web interfaces:
 - trees.html:
 - scheduler.html:
 
+
+
+
+- Hierarchy:
+
+    binarytree.js :: BinaryTree
+        L bst.js :: BST
+            L rbt.js :: RBT
+        L heaptree.js :: HeapTree
+            L heaparray.js :: HeapArray
