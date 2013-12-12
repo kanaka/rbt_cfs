@@ -74,12 +74,12 @@ this models the Linux Completely Fair Scheduler (CFS).
   Chrome). These webapps and node.js interfaces both share the same
   JavaScript code for the underlying algorithms.
 
-    * **trees.html**: This webapp uses the [d3.js]() library to
-      visually render the state of each of tree data-structures. The
-      interface has a dropdown selection for four differnent tree
-      structures: Binary Search Tree, Red-Black Tree, Min/Max
-      HeapTree, and Min/Max HeapArray. After selecting a tree, nodes
-      can be added to the tree one at a time, or as a group of
+    * **trees.html**: This webapp uses the [d3.js](http://d3js.org)
+      library to visually render the state of each of tree
+      data-structures. The interface has a dropdown selection for four
+      differnent tree structures: Binary Search Tree, Red-Black Tree,
+      Min/Max HeapTree, and Min/Max HeapArray. After selecting a tree,
+      nodes can be added to the tree one at a time, or as a group of
       randomly chosen nodes from a range. 
 
     * **scheduler.html**: This webapp presents an interface to the
