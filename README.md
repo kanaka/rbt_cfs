@@ -12,10 +12,10 @@ this models the Linux Completely Fair Scheduler (CFS).
 
 * Prerequisites:
 
-  * You need to install [Node.js](http://nodejs.org)
-  * Unpacked project directory
-  * To run the unit tests you also need to install the nodeunit
-    module. Use npm from the project directory:
+    * You need to install [Node.js](http://nodejs.org)
+    * Unpacked project directory
+    * To run the unit tests you also need to install the nodeunit
+      module. Use npm from the project directory:
 
     ```
     npm install nodeunit
@@ -25,9 +25,9 @@ this models the Linux Completely Fair Scheduler (CFS).
   (unbalanced) Binary Search Tree for the timeline, and generate
   a brief report (elapsed time, throughput, tree operations).
 
-```
-node ./scheduler.js --report bst data/simple3.txt
-```
+    ```
+    node ./scheduler.js --report bst data/simple3.txt
+    ```
 
 * Load a more complicated tasks file, run the scheduler using
   a Red-Black Tree for the timeline, and generate a summary of the
