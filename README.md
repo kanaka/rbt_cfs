@@ -17,9 +17,9 @@ this models the Linux Completely Fair Scheduler (CFS).
     * To run the unit tests you also need to install the nodeunit
       module. Use npm from the project directory:
 
-    ```
-    npm install nodeunit
-    ```
+        ```
+        npm install nodeunit
+        ```
 
 * Load a simple file with 3 tasks, run the scheduler using a simple
   (unbalanced) Binary Search Tree for the timeline, and generate
@@ -34,40 +34,40 @@ this models the Linux Completely Fair Scheduler (CFS).
   state of the timline and a list of the tasks that ran at each time
   unit:
 
-```
-node scheduler.js --summary rbt data/mixed12.txt
-```
+    ```
+    node scheduler.js --summary rbt data/mixed12.txt
+    ```
 
 * Load a larger task file (20 tasks), run the scheduler using
   a Red-Black Tree for the timeline, and generate a detailed report
   (starting tasks, running/completed task at each tick, in addition to
   information from --report):
 
-```
-node ./scheduler.js --detailed rbt data/IncrementalSTdiffRT.txt
-```
+    ```
+    node ./scheduler.js --detailed rbt data/IncrementalSTdiffRT.txt
+    ```
 
 * Generate 9 different sets of tasks (with 2^2 through 2^10 tasks),
   run the scheduler against each task set using a HeapTree for the
   timeline, and generate CSV formatted output (one line per task set):
 
-```
-node ./run_tasks.js --csv heaptree 2 10
-```
+    ```
+    node ./run_tasks.js --csv heaptree 2 10
+    ```
 
 * Load a tasks file with 8 tasks, run the scheduler using a HeapArray
   for the timeline, and generate CSV output with one line for each
   simulation time unit that contains fairness ratios for every task.
 
-```
-node ./run_tasks_fairness.js heaparray data/flat8.txt
-```
+    ```
+    node ./run_tasks_fairness.js heaparray data/flat8.txt
+    ```
 
 * Run all the unit tests using nodeunit:
 
-```
-node node_modules/nodeunit/bin/nodeunit test_*
-```
+    ```
+    node node_modules/nodeunit/bin/nodeunit test_*
+    ```
 
 
 ## Design
