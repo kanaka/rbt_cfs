@@ -11,14 +11,15 @@ this models the Linux Completely Fair Scheduler (CFS).
 ## Running the code
 
 * Prerequisites:
+
   * You need to install [Node.js](http://nodejs.org)
   * Unpacked project directory
   * To run the unit tests you also need to install the nodeunit
     module. Use npm from the project directory:
 
-```
-npm install nodeunit
-```
+    ```
+    npm install nodeunit
+    ```
 
 * Load a simple file with 3 tasks, run the scheduler using a simple
   (unbalanced) Binary Search Tree for the timeline, and generate
