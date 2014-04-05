@@ -1,4 +1,4 @@
-# CSE5311 Project
+# Red-Black Tree and Completely Fair Scheduler Simulation and Visualization
 
 ## Overview
 
@@ -7,6 +7,11 @@ four data structures for use as the future task timeline: Binary
 Search Tree (unbalanced), Red-Black Tree, Heap Tree, and Heap Array.
 When the scheduler is using the RBT data structure for the timeline,
 this models the Linux Completely Fair Scheduler (CFS).
+
+See online versions at:
+
+* [Binary Tree Visualization](http://kanaka.github.io/rbt_cfs/trees.html)
+* [Complete Fair Scheduler Visualation](http://kanaka.github.com.io/rbt_cfs/scheduler.html)
 
 ## Running the code
 
@@ -295,3 +300,7 @@ The tasksToString function (in `tasks.js`) takes a task descriptor
 object/map and generates a string in the task description file format
 which can then be written to disk as a task desctiption file.
 
+### License
+
+This project is licensed under the MPL-2.0 license (see
+LICENSE.MPL-2.0).
