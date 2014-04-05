@@ -11,7 +11,7 @@ this models the Linux Completely Fair Scheduler (CFS).
 See online versions at:
 
 * [Binary Tree Visualization](http://kanaka.github.io/rbt_cfs/trees.html)
-* [Complete Fair Scheduler Visualation](http://kanaka.github.com.io/rbt_cfs/scheduler.html)
+* [Complete Fair Scheduler Visualation](http://kanaka.github.io/rbt_cfs/scheduler.html)
 
 ## Running the code
 
